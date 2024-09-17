@@ -10,15 +10,15 @@ public static class Mixing
             recipe.RequiredIngredients.All(ing =>
             inventory.Contains(ing)));
 
-        var orderMatchingRecipes = matchingRecipes.OrderByDescending(recipe =>
+        var orderedRecipes = matchingRecipes.OrderByDescending(recipe =>
             recipe.RequiredIngredients.Count(ing =>
             inventory.Contains(ing)));
 
-        foreach (var item in matchingRecipes)
+        foreach (var item in orderedRecipes)
         {
             UnityEngine.Debug.Log(item.name);
         }
 
-        return orderMatchingRecipes.First();
+        return orderedRecipes.First();
     }
 }
