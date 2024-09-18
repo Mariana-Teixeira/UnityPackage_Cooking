@@ -7,7 +7,7 @@ public class SO_IngredientEditor : Editor
     private SO_Ingredient m_ingredient;
     private string[] m_keys;
 
-    private void OnEnable()
+    private void Awake()
     {
         m_ingredient = target as SO_Ingredient;
         m_keys = Loader.Effects.Keys.ToArray();
@@ -15,6 +15,8 @@ public class SO_IngredientEditor : Editor
 
     public override void OnInspectorGUI()
     {
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("HealthRecovery"));
+
         m_ingredient.HasEffect = EditorGUILayout.Toggle("Add Effect", m_ingredient.HasEffect);
         if (m_ingredient.HasEffect)
         {
@@ -26,7 +28,6 @@ public class SO_IngredientEditor : Editor
             m_ingredient.Effect = string.Empty;
         }
 
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("HealthRecovery"));
         serializedObject.ApplyModifiedProperties();
     }
 }

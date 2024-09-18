@@ -12,4 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b8a76139f065e84da855bc6db1971e3, type: 3}
   m_Name: AddStrength
   m_EditorClassIdentifier: 
-  IntValue: 1
+  Value: 2
+  Event:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6388949157050985165, guid: 3ad023ec8780f774ea4c959cd2fdf45b, type: 3}
+        m_TargetAssemblyTypeName: FoodConsumption, RuntimeScripts
+        m_MethodName: RecoverStrength
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
