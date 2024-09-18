@@ -4,8 +4,6 @@ using UnityEditor;
 [CustomEditor(typeof(SO_Ingredient))]
 public class SO_IngredientEditor : Editor
 {
-    private bool m_instantiated = false;
-
     private SO_Ingredient m_ingredient;
     private string[] m_keys;
 
@@ -28,6 +26,7 @@ public class SO_IngredientEditor : Editor
             m_ingredient.Effect = string.Empty;
         }
 
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("HealthRecovery"));
         serializedObject.ApplyModifiedProperties();
     }
 }

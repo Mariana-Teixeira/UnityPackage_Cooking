@@ -9,9 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7726ead37a8d36c418e725477a9787cf, type: 3}
-  m_Name: Meat_Pork
+  m_Script: {fileID: 11500000, guid: 5b8a76139f065e84da855bc6db1971e3, type: 3}
+  m_Name: AddStrength
   m_EditorClassIdentifier: 
-  HasEffect: 0
-  EffectIndex: 0
-  Effect: 
+  IntValue: 1

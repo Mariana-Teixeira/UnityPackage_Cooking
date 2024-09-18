@@ -10,7 +10,6 @@ public static class Mixing
             recipe.RequiredIngredients.All(ing =>
             inventory.Contains(ing)));
 
-        // TODO: Optimize to only search for the highest number, without needing to reorder.
         var orderedRecipes = matchingRecipes.OrderByDescending(recipe =>
             recipe.RequiredIngredients.Count(ing =>
             inventory.Contains(ing)));
@@ -29,10 +28,15 @@ public static class Mixing
     public static SO_Effect RetrieveEffect(List<SO_Ingredient> ingredients)
     {
         var possibleEffects = ingredients.Where(ingredient =>
-        ingredient.HasEffect).Select(ingredient =>
-        ingredient.Effect);
+            ingredient.HasEffect).Select(ingredient =>
+            ingredient.Effect);
 
-        if (possibleEffects.Count() > 0)
+        if (possibleEffects.Count() < 0) return null;
+
+        var groupingEffects = possibleEffects.GroupBy(effect =>
+            effect);
+
+        if (groupingEffects.Count() == 1)
         {
             UnityEngine.Debug.Log(Loader.Effects[possibleEffects.First()]);
             return Loader.Effects[possibleEffects.First()];

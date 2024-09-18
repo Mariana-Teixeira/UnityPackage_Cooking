@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7726ead37a8d36c418e725477a9787cf, type: 3}
-  m_Name: Meat_Chicken
+  m_Script: {fileID: 11500000, guid: d28b862f0bf548f4daa8dbbf4c857fad, type: 3}
+  m_Name: CookedRice
   m_EditorClassIdentifier: 
-  HasEffect: 0
-  EffectIndex: 0
-  Effect: 
+  RequiredIngredients:
+  - {fileID: 11400000, guid: 5ec530452835c2046b42c2b388f68e0f, type: 2}
