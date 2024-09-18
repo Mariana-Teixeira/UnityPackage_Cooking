@@ -10,15 +10,36 @@ public static class Mixing
             recipe.RequiredIngredients.All(ing =>
             inventory.Contains(ing)));
 
+        // TODO: Optimize to only search for the highest number, without needing to reorder.
         var orderedRecipes = matchingRecipes.OrderByDescending(recipe =>
             recipe.RequiredIngredients.Count(ing =>
             inventory.Contains(ing)));
 
-        foreach (var item in orderedRecipes)
+        if (orderedRecipes.Count() > 0)
         {
-            UnityEngine.Debug.Log(item.name);
+            UnityEngine.Debug.Log(orderedRecipes.First());
+            return orderedRecipes.First();
         }
+        else
+        {
+            return null;
+        }
+    }
 
-        return orderedRecipes.First();
+    public static SO_Effect RetrieveEffect(List<SO_Ingredient> ingredients)
+    {
+        var possibleEffects = ingredients.Where(ingredient =>
+        ingredient.HasEffect).Select(ingredient =>
+        ingredient.Effect);
+
+        if (possibleEffects.Count() > 0)
+        {
+            UnityEngine.Debug.Log(Loader.Effects[possibleEffects.First()]);
+            return Loader.Effects[possibleEffects.First()];
+        }
+        else
+        {
+            return null;
+        }
     }
 }

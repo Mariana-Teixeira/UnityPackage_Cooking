@@ -9,10 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d28b862f0bf548f4daa8dbbf4c857fad, type: 3}
-  m_Name: Curry
+  m_Script: {fileID: 11500000, guid: 5b8a76139f065e84da855bc6db1971e3, type: 3}
+  m_Name: AddStamina
   m_EditorClassIdentifier: 
-  Type: 2
-  RequiredIngredients:
-  - {fileID: 11400000, guid: 5ec530452835c2046b42c2b388f68e0f, type: 2}
-  - {fileID: 11400000, guid: 5fb276335b9a871409f7c99b504b03f6, type: 2}
+  IntValue: 1

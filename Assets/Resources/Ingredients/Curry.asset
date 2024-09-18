@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7726ead37a8d36c418e725477a9787cf, type: 3}
   m_Name: Curry
   m_EditorClassIdentifier: 
-  Name: Curry
-  Value: 0
-  Effect: 0
+  HasEffect: 0
+  EffectIndex: 0
+  Effect: 

@@ -2,10 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+// TODO: Comment my code.
 public class MixManager : MonoBehaviour
 {
     [SerializeField]
     private Transform m_uiIngredients;
+    private SO_Recipe m_recipeCreated;
 
     public List<SO_Ingredient> GetIngredientsSelected()
     {
@@ -15,9 +17,21 @@ public class MixManager : MonoBehaviour
         return selectedIngredients;
     }
 
-    public void Mix()
+    public bool Mix(out Food createdFood)
     {
-        var list = GetIngredientsSelected();
-        Mixing.MixingIngredients(list);
+        var chosenIngredients = GetIngredientsSelected();
+        var recipe = Mixing.MixingIngredients(chosenIngredients);
+        var effect = Mixing.RetrieveEffect(chosenIngredients);
+
+        if (recipe == null)
+        {
+            createdFood = null;
+            return false;
+        }
+        else
+        {
+            createdFood = new Food(m_recipeCreated, chosenIngredients, effect);
+            return true;
+        }
     }
 }
