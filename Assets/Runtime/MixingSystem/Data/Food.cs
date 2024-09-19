@@ -6,6 +6,13 @@ public class Food
     private List<SO_Ingredient> m_ingredientsUsed;
     private SO_Effect m_foodEffect;
 
+    public SO_Recipe RecipeCreated
+    {
+        get
+        {
+            return m_recipeCreated;
+        }
+    }
     public List<SO_Ingredient> IngredientsUsed
     {
         get

@@ -17,9 +17,9 @@ public class MixManager : MonoBehaviour
         return selectedIngredients;
     }
 
-    public bool Mix(out Food createdFood)
+    public bool Mix(List<SO_Ingredient> chosenIngredients, out Food createdFood)
     {
-        var chosenIngredients = GetIngredientsSelected();
+        //var chosenIngredients = GetIngredientsSelected();
         var recipe = Mixing.MixingIngredients(chosenIngredients);
         var effect = Mixing.RetrieveEffect(chosenIngredients);
 
