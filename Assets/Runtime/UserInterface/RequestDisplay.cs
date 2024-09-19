@@ -25,7 +25,7 @@ public class RequestDisplay : MonoBehaviour
 
     private void OnReceiveDisplayText(Request request)
     {
-        var display = $"{request.RequestRecipe.name}";
+        var display = $"{request}";
         UpdateDisplay(display);
     }
 

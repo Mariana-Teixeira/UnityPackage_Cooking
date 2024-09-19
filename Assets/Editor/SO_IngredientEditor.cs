@@ -15,7 +15,7 @@ public class SO_IngredientEditor : Editor
 
     public override void OnInspectorGUI()
     {
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("HealthRecovery"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("IngredientValue"));
 
         m_ingredient.HasEffect = EditorGUILayout.Toggle("Add Effect", m_ingredient.HasEffect);
         if (m_ingredient.HasEffect)

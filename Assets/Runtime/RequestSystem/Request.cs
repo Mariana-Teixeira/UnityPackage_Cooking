@@ -17,7 +17,7 @@ public class Request
 
     public override string ToString()
     {
-        string message = string.Empty;
+        string message = $"{m_requestRecipe.name}\n";
         foreach(var ingredient in m_requestRecipe.RequiredIngredients) message += $"- {ingredient.name}\n";
         return message;
     }
