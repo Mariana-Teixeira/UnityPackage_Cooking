@@ -49,4 +49,11 @@ public static class Mixing
         if (groupingEffects.Count() == 1) return Loader.Effects[possibleEffects.First()];
         else return null;
     }
+
+    public static int GetPoints(Food food)
+    {
+        var pointsToAdd = 0;
+        foreach (var ingredient in food.IngredientsUsed) pointsToAdd += ingredient.IngredientValue;
+        return pointsToAdd;
+    }
 }

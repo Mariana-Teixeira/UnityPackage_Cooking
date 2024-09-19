@@ -3,7 +3,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private const float SENSITIVITY = 5.0f;
+    private const float SENSITIVITY = 8.0f;
+    private const float MOUSESPEED = 8.0f;
     private const float CLAMP = 60f;
 
     private CharacterController m_characterController;
@@ -16,6 +17,9 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 m_mouseDelta;
     private float m_invertCamera = -1.0f;
 
+    private float m_rotationY = 0.0f;
+    private float m_rotationX = 0.0f;
+
 
     private void Awake()
     {
@@ -25,8 +29,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = true;
+        //Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
@@ -42,7 +45,6 @@ public class PlayerMovement : MonoBehaviour
         m_characterController.Move(m_moveDirection * m_moveSpeed * Time.deltaTime);
     }
 
-    private float m_rotationX = 0.0f;
     private void RotateCamera()
     {
         m_rotationX += m_mouseDelta.y * SENSITIVITY * m_invertCamera * Time.deltaTime;
@@ -50,11 +52,11 @@ public class PlayerMovement : MonoBehaviour
         m_cameraTransform.localRotation = Quaternion.Euler(m_rotationX, 0f, 0f);
     }
 
-    float rotationY = 0.0f;
     private void RotatePlayer()
     {
-        rotationY = m_mouseDelta.x * SENSITIVITY * Time.deltaTime;
-        transform.Rotate(Vector3.up * rotationY);
+        m_rotationY = m_mouseDelta.x * SENSITIVITY * Time.deltaTime;
+        m_rotationY = Mathf.Clamp(m_rotationY, -MOUSESPEED, MOUSESPEED);
+        transform.Rotate(Vector3.up * m_rotationY);
     }
 
     public void OnMove(InputValue value) => m_inputDirection = value.Get<Vector2>();

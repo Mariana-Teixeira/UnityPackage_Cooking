@@ -9,7 +9,7 @@ public class Request
             return m_requestRecipe;
         }
     }
-
+    
     public Request(SO_Recipe recipe)
     {
         m_requestRecipe = recipe;
@@ -17,8 +17,8 @@ public class Request
 
     public override string ToString()
     {
-        string message = "Request";
-        foreach(var ingredient in m_requestRecipe.RequiredIngredients) message += $"\n\t{ingredient.name}";
+        string message = string.Empty;
+        foreach(var ingredient in m_requestRecipe.RequiredIngredients) message += $"- {ingredient.name}\n";
         return message;
     }
 }
