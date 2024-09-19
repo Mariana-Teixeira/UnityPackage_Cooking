@@ -2,47 +2,39 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
+// TODO: Comment my code.
 public class PlayerActions : MonoBehaviour
 {
-    [SerializeField]
-    private UnityEvent<string> GrabIngredient;
-    [SerializeField]
-    private UnityEvent DeliverAndRequest;
-    [SerializeField]
-    private UnityEvent TrashInventory;
-
-    private FoodDelivery m_foodConsumption;
-    private CharacterController m_characterController;
+    private FoodDelivery m_foodDelivery;
     private Camera m_camera;
 
     [SerializeField]
     private LayerMask m_rayMask;
-    private float m_rayDistance = 2.0f;
+    private float m_rayDistance = 1.0f;
 
-    private Vector2 m_inputDirection = Vector2.zero;
-    private Vector3 m_moveDirection = Vector2.zero;
-    private float m_moveSpeed = 5.0f;
+    private UnityEvent<string> GrabIngredient = new UnityEvent<string>();
+    private UnityEvent DeliverAndRequest = new UnityEvent();
+    private UnityEvent TrashInventory = new UnityEvent();
 
     private void Awake()
     {
-        m_foodConsumption = GetComponent<FoodDelivery>();
-        m_characterController = GetComponent<CharacterController>();
+        m_foodDelivery = GetComponent<FoodDelivery>();
         m_camera = FindAnyObjectByType<Camera>();
     }
 
-    private void Update()
+    private void OnEnable()
     {
-        MovePlayer();
+        GrabIngredient.AddListener(m_foodDelivery.GrabIngredient);
+        DeliverAndRequest.AddListener(m_foodDelivery.DeliverAndRequestFood);
+        TrashInventory.AddListener(m_foodDelivery.Trash);
     }
 
-
-
-    private void MovePlayer()
+    private void OnDisable()
     {
-        m_moveDirection = transform.forward * m_inputDirection.y + transform.right * m_inputDirection.x;
-        m_characterController.Move(m_moveDirection * m_moveSpeed * Time.deltaTime);
+        GrabIngredient.RemoveListener(m_foodDelivery.GrabIngredient);
+        DeliverAndRequest.RemoveListener(m_foodDelivery.DeliverAndRequestFood);
+        TrashInventory.RemoveListener(m_foodDelivery.Trash);
     }
-
 
     private void PlayerInteraction()
     {
@@ -66,7 +58,5 @@ public class PlayerActions : MonoBehaviour
             }
         }
     }
-
-    public void OnMove(InputValue value) => m_inputDirection = value.Get<Vector2>();
     public void OnInteract() => PlayerInteraction();
 }

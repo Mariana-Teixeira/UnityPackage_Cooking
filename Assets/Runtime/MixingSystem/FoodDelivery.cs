@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class FoodDelivery : MonoBehaviour
@@ -8,13 +6,13 @@ public class FoodDelivery : MonoBehaviour
     private int m_money = 0;
     private int m_reputation = 0;
 
+    [SerializeField]
+    private InventoryDisplay m_inventoryDisplay;
     private List<SO_Ingredient> m_chosenIngredients = new List<SO_Ingredient>();
 
-    private MixManager m_mixManager;
-
-    private void Awake()
+    private void Start()
     {
-        m_mixManager = FindAnyObjectByType<MixManager>();
+        RequestManager.PoolRequest.Invoke();
     }
 
     private void GainIngredientValue(Food food)
@@ -23,40 +21,49 @@ public class FoodDelivery : MonoBehaviour
         m_money += add;
     }
 
-    public void RecoverStrength(Food food)
-    {
-        var add = food.FoodEffect.EffectValue;
-        m_reputation += add;
-    }
-
     public void GrabIngredient(string ingredientName)
     {
         var ingredient = Loader.Ingredients[ingredientName];
         m_chosenIngredients.Add(ingredient);
+        m_inventoryDisplay.UpdateText(m_chosenIngredients);
+    }
+
+    public void DeliverAndRequestFood()
+    {
+        var food = CreateFood();
+        var success = Deliver(food);
+        if (success) { ApplyFoodEffect(food); Trash(); Request(); }
+        else { Debug.LogWarning("Requested Food and Delivered Food do not match."); }
+    }
+
+    private bool Deliver(Food food)
+    {
+        var success = RequestManager.Compare(food);
+        return success;
+    }
+
+    private void Request()
+    {
+        RequestManager.PoolRequest.Invoke();
     }
 
     public void Trash()
     {
         m_chosenIngredients.Clear();
+        m_inventoryDisplay.UpdateText(m_chosenIngredients);
     }
 
-    public Food CreateFood()
+    private Food CreateFood()
     {
-        var result = m_mixManager.Mix(m_chosenIngredients, out Food food);
+        var result = Mixing.Mix(m_chosenIngredients, out Food food);
         if (result == true) return food;
         else { Debug.LogError("Unable to Create Food"); return null; }
     }
 
-    public bool DeliverFood()
+    private void ApplyFoodEffect(Food food)
     {
-        var food = CreateFood();
-        var request = RequestManager.GetCurrentRequest.Invoke();
-
-        if (food.RecipeCreated != request.RequestRecipe) { Debug.LogWarning("Recipes don't match."); return false; }
-
         GainIngredientValue(food);
         food.ApplyEffect();
-        return true;
     }
 
     private int SumPoints(Food food)
@@ -64,5 +71,12 @@ public class FoodDelivery : MonoBehaviour
         var pointsToAdd = 0;
         foreach (var ingredient in food.IngredientsUsed) pointsToAdd += ingredient.IngredientValue;
         return pointsToAdd;
+    }
+
+    // TODO: Move to a different class.
+    public void RecoverStrength(Food food)
+    {
+        var add = food.FoodEffect.EffectValue;
+        m_reputation += add;
     }
 }

@@ -3,6 +3,23 @@ using System.Linq;
 
 public static class Mixing
 {
+    public static bool Mix(List<SO_Ingredient> chosenIngredients, out Food createdFood)
+    {
+        var recipe = MixingIngredients(chosenIngredients);
+        var effect = RetrieveEffect(chosenIngredients);
+
+        if (recipe == null)
+        {
+            createdFood = null;
+            return false;
+        }
+        else
+        {
+            createdFood = new Food(recipe, chosenIngredients, effect);
+            return true;
+        }
+    }
+
     public static SO_Recipe MixingIngredients(List<SO_Ingredient> inventory)
     {
         var matchingRecipes = Loader.
@@ -14,15 +31,8 @@ public static class Mixing
             recipe.RequiredIngredients.Count(ing =>
             inventory.Contains(ing)));
 
-        if (orderedRecipes.Count() > 0)
-        {
-            UnityEngine.Debug.Log(orderedRecipes.First());
-            return orderedRecipes.First();
-        }
-        else
-        {
-            return null;
-        }
+        if (orderedRecipes.Count() > 0) return orderedRecipes.First();
+        else return null;
     }
 
     public static SO_Effect RetrieveEffect(List<SO_Ingredient> ingredients)
@@ -36,14 +46,7 @@ public static class Mixing
         var groupingEffects = possibleEffects.GroupBy(effect =>
             effect);
 
-        if (groupingEffects.Count() == 1)
-        {
-            UnityEngine.Debug.Log(Loader.Effects[possibleEffects.First()]);
-            return Loader.Effects[possibleEffects.First()];
-        }
-        else
-        {
-            return null;
-        }
+        if (groupingEffects.Count() == 1) return Loader.Effects[possibleEffects.First()];
+        else return null;
     }
 }
