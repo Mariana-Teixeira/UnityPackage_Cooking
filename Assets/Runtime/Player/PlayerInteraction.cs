@@ -1,83 +1,52 @@
-using System;
 using UnityEngine;
+using static UnityEngine.Screen;
 
-// TODO: Comment my code.
-public class PlayerInteraction : MonoBehaviour
+public interface IInteractable
 {
-    private Camera m_camera;
+    public void Interact();
+}
+
+public class PlayerInteraction
+{
     private RaycastHit m_hit;
     private bool m_canSelect;
-    private LayerMask m_rayMask;
-    private float m_rayDistance = 1.0f;
+    private readonly Camera m_camera;
+    private readonly LayerMask m_rayMask;
+    private readonly float m_rayDistance;
 
     private enum SelectState { MouseOver, MouseLeave };
     private SelectState m_currentSelectState;
 
-    public static Action CursorStateChange;
-    public static Action<string> TransportIngredient;
-    public static Action Cook;
-    public static Action DeliverRequest;
-    public static Action TrashIngredients;
-
-    private void Awake()
+    public PlayerInteraction(Camera camera, LayerMask mask, float rayDistance)
     {
-        m_rayMask = LayerMask.GetMask("Interactable");
-        m_camera = FindAnyObjectByType<Camera>();
+        m_camera = camera;
+        m_rayMask = mask;
+        m_rayDistance = rayDistance;
     }
 
-    private void Update()
+    public void Update()
     {
         SelectionRaycaster();
         CallWhenStateChange();
     }
+    
+    public void Interact()
+    {
+        if (m_canSelect == false) return;
+        m_hit.collider.GetComponent<IInteractable>().Interact();
+    }
 
     private void SelectionRaycaster()
     {
-        var centerViewport = new Vector3(Screen.width / 2, Screen.height / 2, 0);
+        var centerViewport = new Vector3(width / 2.0f, height / 2.0f, 0);
         var _lookingAtRay = m_camera.ScreenPointToRay(centerViewport);
         m_canSelect = Physics.Raycast(_lookingAtRay, out m_hit, m_rayDistance, m_rayMask);
     }
 
     private void CallWhenStateChange()
     {
-        var state = GetState();
-        if (m_currentSelectState == state) return;
-
-        m_currentSelectState = state;
-        CursorStateChange.Invoke();
+        m_currentSelectState = GetState();
     }
-
-    private SelectState GetState()
-    {
-        if (m_canSelect) return SelectState.MouseOver;
-        else return SelectState.MouseLeave;
-    }
-
-    private void InvokeInteractEvent()
-    {
-        if (m_canSelect == false) return;
-
-        if (m_hit.collider.CompareTag("FoodStorage"))
-        {
-            var objectName = m_hit.collider.name;
-            TransportIngredient.Invoke(objectName);
-        }
-        else if (m_hit.collider.CompareTag("Cooker"))
-        {
-            Cook.Invoke();
-        }
-        else if (m_hit.collider.CompareTag("Requester"))
-        {
-            DeliverRequest.Invoke();
-        }
-        else if (m_hit.collider.CompareTag("Trash"))
-        {
-            TrashIngredients.Invoke();
-        }
-        else
-        {
-            Debug.LogError("Interact: Item not selectable.");
-        }
-    }
-    public void OnInteract() => InvokeInteractEvent();
+    
+    private SelectState GetState() => m_canSelect ? SelectState.MouseOver : SelectState.MouseLeave;
 }

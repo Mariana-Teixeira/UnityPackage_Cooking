@@ -9,8 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64846193bb5c4e41a911d9a374370257, type: 3}
-  m_Name: Sausage
+  m_Script: {fileID: 11500000, guid: 9ad507191d350a446b1889eff3e4a67e, type: 3}
+  m_Name: HotDog
   m_EditorClassIdentifier: 
-  State: 0
-  Category: 1
+  Steps:
+  - State: 1
+    RequiredIngredients:
+    - {fileID: 11400000, guid: d37f4ed4907805840b10f886f0e6d7bf, type: 2}
+    RequiredCategories: 00000000

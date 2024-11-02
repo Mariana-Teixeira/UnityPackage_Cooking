@@ -1,64 +1,50 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement
 {
-    private const float SENSITIVITY = 8.0f;
-    private const float MOUSESPEED = 8.0f;
-    private const float CLAMP = 60f;
+    private const float m_mouseSensitivity = 8.0f;
+    private const float m_mouseSpeed = 8.0f;
+    private const float m_rotationClamp = 60f;
+    private const float m_invertCamera = -1.0f;
 
-    private CharacterController m_characterController;
-    private Transform m_cameraTransform;
+    private readonly CharacterController m_characterController;
+    private readonly Transform m_cameraTransform;
+    
+    private Vector3 m_moveDirection;
 
-    private Vector2 m_inputDirection = Vector2.zero;
-    private Vector3 m_moveDirection = Vector2.zero;
-    private float m_moveSpeed = 5.0f;
+    private float m_rotationY;
+    private float m_rotationX;
 
-    private Vector2 m_mouseDelta;
-    private float m_invertCamera = -1.0f;
-
-    private float m_rotationY = 0.0f;
-    private float m_rotationX = 0.0f;
-
-
-    private void Awake()
+    public PlayerMovement(CharacterController characterController, Transform cameraTransform)
     {
-        m_characterController = GetComponent<CharacterController>();
-        m_cameraTransform = FindAnyObjectByType<Camera>().transform;
+        m_characterController = characterController;
+        m_cameraTransform = cameraTransform;
     }
 
-    private void Start()
+    public void Update(Transform playerTransform, float speed, Vector2 inputDirection, Vector2 mouseDelta)
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        MovePlayer(playerTransform, speed, inputDirection);
+        RotatePlayer(playerTransform, mouseDelta);
+        RotateCamera(mouseDelta);
     }
 
-    private void Update()
+    private void MovePlayer(Transform transform, float moveSpeed, Vector2 inputDirection)
     {
-        MovePlayer();
-        RotatePlayer();
-        RotateCamera();
+        m_moveDirection = transform.forward * inputDirection.y + transform.right * inputDirection.x;
+        m_characterController.Move(m_moveDirection * (moveSpeed * Time.deltaTime));
     }
-
-    private void MovePlayer()
+    
+    private void RotatePlayer(Transform transform, Vector2 mouseDelta)
     {
-        m_moveDirection = transform.forward * m_inputDirection.y + transform.right * m_inputDirection.x;
-        m_characterController.Move(m_moveDirection * m_moveSpeed * Time.deltaTime);
-    }
-
-    private void RotateCamera()
-    {
-        m_rotationX += m_mouseDelta.y * SENSITIVITY * m_invertCamera * Time.deltaTime;
-        m_rotationX = Mathf.Clamp(m_rotationX, -CLAMP, CLAMP);
-        m_cameraTransform.localRotation = Quaternion.Euler(m_rotationX, 0f, 0f);
-    }
-
-    private void RotatePlayer()
-    {
-        m_rotationY = m_mouseDelta.x * SENSITIVITY * Time.deltaTime;
-        m_rotationY = Mathf.Clamp(m_rotationY, -MOUSESPEED, MOUSESPEED);
+        m_rotationY = mouseDelta.x * m_mouseSensitivity * Time.deltaTime;
+        m_rotationY = Mathf.Clamp(m_rotationY, -m_mouseSpeed, m_mouseSpeed);
         transform.Rotate(Vector3.up * m_rotationY);
     }
 
-    public void OnMove(InputValue value) => m_inputDirection = value.Get<Vector2>();
-    public void OnLook(InputValue value) => m_mouseDelta = value.Get<Vector2>();
+    private void RotateCamera(Vector2 mouseDelta)
+    {
+        m_rotationX += mouseDelta.y * m_mouseSensitivity * m_invertCamera * Time.deltaTime;
+        m_rotationX = Mathf.Clamp(m_rotationX, -m_rotationClamp, m_rotationClamp);
+        m_cameraTransform.localRotation = Quaternion.Euler(m_rotationX, 0f, 0f);
+    }
 }

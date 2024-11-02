@@ -1,110 +1,48 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CookingManager : MonoBehaviour
 {
-    private PlayerStats m_playerStats;
-    private List<SO_Ingredient> m_ingredientsToCook = new List<SO_Ingredient>();
-    private Food m_cookedFood;
+    private EventBinding<StorageEvent> m_storageEvent;
+    private EventBinding<ContainerEvent> m_containerEvent;
+    
+    private Ingredient m_holdingIngredient;
+    private Container m_container;
 
     private void Awake()
     {
-        m_playerStats = GetComponent<PlayerStats>();
-    }
-
-    private void Start()
-    {
-        RequestManager.PoolRequest.Invoke();
-        CookerDisplay.SendDisplayText("Empty");
-        DeliverDisplay.SendDisplayText("Nothing");
+        m_storageEvent = new EventBinding<StorageEvent>(GetFromStorage);
+        m_containerEvent = new EventBinding<ContainerEvent>(SetFromContainer);
     }
 
     private void OnEnable()
     {
-        PlayerInteraction.TransportIngredient += OnTransportIngredient;
-        PlayerInteraction.Cook += OnCook;
-        PlayerInteraction.DeliverRequest += OnDeliverRequest;
-        PlayerInteraction.TrashIngredients += OnTrashIngredients;
+        EventBus<StorageEvent>.Register(m_storageEvent);
+        EventBus<ContainerEvent>.Register(m_containerEvent);
     }
 
     private void OnDisable()
     {
-        PlayerInteraction.TransportIngredient -= OnTransportIngredient;
-        PlayerInteraction.Cook -= OnCook;
-        PlayerInteraction.DeliverRequest -= OnDeliverRequest;
-        PlayerInteraction.TrashIngredients -= OnTrashIngredients;
+        EventBus<StorageEvent>.Deregister(m_storageEvent);
+        EventBus<ContainerEvent>.Deregister(m_containerEvent);
     }
 
-    private void OnTransportIngredient(string ingredientName)
+    private void GetFromStorage(StorageEvent @event)
     {
-        SoundManager.PlaySound(0);
-        var ingredient = Loader.Ingredients[ingredientName];
-        m_ingredientsToCook.Add(ingredient);
-        CookerDisplay.DisplayFromIngredients.Invoke(m_ingredientsToCook);
+        Debug.Log("Got: " + @event.ingredientData.name);
+        m_holdingIngredient = new Ingredient(@event.ingredientData.name, @event.ingredientData.Category);
     }
 
-    private void OnCook()
+    private void SetFromContainer(ContainerEvent @event)
     {
-        if (m_ingredientsToCook.Count <= 0) { InformationDisplay.SendDisplayText.Invoke("The cooker is empty.", Color.yellow); return; }
-
-        SoundManager.PlaySound(1);
-        m_cookedFood = CreateFood();
-        DeliverDisplay.SendFood(m_cookedFood);
-        ResetIngredients();
+        Debug.Log("Set: " + m_holdingIngredient);
+        @event.Container.AddToContainer(m_holdingIngredient);
+        Debug.Log("Select: " + @event.Container.name);
+        m_container = @event.Container;
     }
 
-    private void OnDeliverRequest()
+    private void CookFromCooker(CookEvent @event)
     {
-        if (m_cookedFood == null) { InformationDisplay.SendDisplayText("There is nothing to deliver.", Color.yellow); return; }
-
-        Deliver(m_cookedFood);
-    }
-
-    private void OnTrashIngredients()
-    {
-        SoundManager.PlaySound(4);
-        ResetIngredients();
-    }
-
-    private void ResetIngredients()
-    {
-        m_ingredientsToCook.Clear();
-        CookerDisplay.SendDisplayText("Empty");
-    }
-
-    private void Deliver(Food food)
-    {
-        var success = RequestManager.CompareFoodAndRecipe(food);
-        if (success) DeliverRightFood(food);
-        else DeliverWrongFood();
-        ResetDelivery();
-    }
-
-    private void ResetDelivery()
-    {
-        DeliverDisplay.SendDisplayText("Nothing");
-        m_cookedFood = null;
-    }
-
-    private void DeliverRightFood(Food food)
-    {
-        SoundManager.PlaySound.Invoke(2);
-        m_playerStats.ApplyFoodEffect(food);
-        Request();
-    }
-
-    private void DeliverWrongFood()
-    {
-        SoundManager.PlaySound.Invoke(3);
-        InformationDisplay.SendDisplayText.Invoke("The client didn't ask for this.", Color.yellow);
-    }
-
-    private void Request() => RequestManager.PoolRequest.Invoke();
-
-    private Food CreateFood()
-    {
-        var result = Mixing.Mix(m_ingredientsToCook, out Food food);
-        if (result == false) { Debug.LogError("Couldn't create food."); return null; }
-        return food;
+        @event.Appliance.Cook(m_container);
+        m_container = null;
     }
 }
