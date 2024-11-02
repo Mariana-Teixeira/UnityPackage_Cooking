@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 64846193bb5c4e41a911d9a374370257, type: 3}
-  m_Name: Ketchup
+  m_Name: Bacalhau
   m_EditorClassIdentifier: 
-  Category: 2
+  Category: 1

@@ -1,20 +1,20 @@
 public readonly struct StorageEvent : IEvent
 {
-    public IngredientData ingredientData { get; }
+    public Ingredient @Ingredient { get; }
 
-    public StorageEvent(IngredientData ingredientData)
+    public StorageEvent(Ingredient ingredient)
     {
-        this.ingredientData = ingredientData;
+        @Ingredient = ingredient;
     }
 }
 
 public struct ContainerEvent : IEvent
 {
-    public Container @Container { get; }
+    public Tray @Tray { get; }
 
-    public ContainerEvent(Container container)
+    public ContainerEvent(Tray tray)
     {
-        @Container = container;
+        @Tray = tray;
     }
 }
 
@@ -28,7 +28,22 @@ public struct CookEvent : IEvent
     }
 }
 
+public struct PlateEvent : IEvent
+{
+    public Plate @Plate { get; }
+
+    public PlateEvent(Plate plate)
+    {
+        @Plate = plate;
+    }
+}
+
 public struct DeliverEvent : IEvent
 {
-    public DeliverEvent(int i) { }
+    public DeliveryDriver Driver { get; }
+
+    public DeliverEvent(DeliveryDriver driver)
+    {
+        Driver = driver;
+    }
 }
