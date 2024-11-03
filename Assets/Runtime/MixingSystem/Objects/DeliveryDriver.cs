@@ -7,12 +7,12 @@ public class DeliveryDriver : MonoBehaviour, IInteractable
 
     private void Start() => Request();
 
-    public void Interact() => EventBus<PassObjectEvent<DeliveryDriver>>.Raise(new PassObjectEvent<DeliveryDriver>(this));
+    public void Interact() => EventBus<PassEvent<DeliveryDriver>>.Raise(new PassEvent<DeliveryDriver>(this));
 
     public void Request()
     {
         m_requestedRecipe = Loader.GetRandomRecipe();
-        Debug.Log("Requested: " + m_requestedRecipe.name);
+        // Debug.Log("Requested: " + m_requestedRecipe.name);
     }
 
     public bool Deliver(Plate plate)
