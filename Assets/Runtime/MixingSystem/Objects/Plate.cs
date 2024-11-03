@@ -6,7 +6,7 @@ public class Plate : MonoBehaviour, IInteractable
 {
     public readonly Dictionary<CookState, HashSet<Ingredient>> IngredientMap = new();
 
-    public void Interact() => EventBus<PlateEvent>.Raise(new PlateEvent(this));
+    public void Interact() => EventBus<PassObjectEvent<Plate>>.Raise(new PassObjectEvent<Plate>(this));
 
     private HashSet<Ingredient> GetMap(CookState state)
     {

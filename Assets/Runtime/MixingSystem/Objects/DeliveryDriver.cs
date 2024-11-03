@@ -7,7 +7,7 @@ public class DeliveryDriver : MonoBehaviour, IInteractable
 
     private void Start() => Request();
 
-    public void Interact() => EventBus<DeliverEvent>.Raise(new DeliverEvent(this));
+    public void Interact() => EventBus<PassObjectEvent<DeliveryDriver>>.Raise(new PassObjectEvent<DeliveryDriver>(this));
 
     public void Request()
     {
