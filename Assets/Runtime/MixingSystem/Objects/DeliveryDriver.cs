@@ -3,21 +3,22 @@ using UnityEngine;
 
 public class DeliveryDriver : MonoBehaviour, IInteractable
 {
-    private Recipe m_requestedRecipe;
+    private Recipe _requestedRecipe;
 
     private void Start() => Request();
 
-    public void Interact() => EventBus<PassEvent<DeliveryDriver>>.Raise(new PassEvent<DeliveryDriver>(this));
+    public void Grab() { }
+    public void DropOn<T>() => EventBus<DropOnObject<T, DeliveryDriver>>.Raise(new DropOnObject<T, DeliveryDriver>(this));
 
-    public void Request()
+    private void Request()
     {
-        m_requestedRecipe = Loader.GetRandomRecipe();
+        _requestedRecipe = Loader.GetRandomRecipe();
         // Debug.Log("Requested: " + m_requestedRecipe.name);
     }
 
     public bool Deliver(Plate plate)
     {
-        var requested = m_requestedRecipe.m_dish;
+        var requested = _requestedRecipe._dish;
         var delivered = plate.IngredientMap;
 
         foreach (var requirement in requested)

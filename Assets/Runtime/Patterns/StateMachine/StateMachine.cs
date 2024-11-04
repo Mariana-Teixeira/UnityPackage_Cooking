@@ -3,8 +3,8 @@ using System.Linq;
 
 public class StateMachine
 {
-    private readonly Dictionary<IState, Node> m_nodes = new();
-    private Node m_currentNode;
+    private readonly Dictionary<IState, Node> _nodes = new();
+    private Node _currentNode;
 
     public void Compare<T>(T target)
     {
@@ -22,28 +22,28 @@ public class StateMachine
 
     private Transition GetTransition<T>(T target)
     {
-        return m_currentNode.Transitions.FirstOrDefault(transition => transition.Condition.Compare(target));
+        return _currentNode.Transitions.FirstOrDefault(transition => transition.Condition.Compare(target));
     }
     
     public void SetState(IState state)
     {
-        m_currentNode = GetNode(state);
+        _currentNode = GetNode(state);
     }
 
     private Node GetNode(IState from)
     {
-        if (!m_nodes.ContainsKey(from))
+        if (!_nodes.ContainsKey(from))
         {
-            m_nodes.Add(from, new Node(from));
+            _nodes.Add(from, new Node(from));
         }
         
-        return m_nodes[from];
+        return _nodes[from];
     }
 
     private void ChangeState(IState state)
     {
-        if (m_currentNode.State == state) return;
-        m_currentNode = GetNode(state);
-        m_currentNode.State.OnEnter();
+        if (_currentNode.State == state) return;
+        _currentNode = GetNode(state);
+        _currentNode.State.OnEnter();
     }
 }

@@ -1,10 +1,11 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "Recipe", menuName = "Cooking/Recipe")]
 public class Recipe : ScriptableObject
 {
-    public Requirements[] m_dish;
+    public Requirements[] _dish;
 }
 
 [Serializable]

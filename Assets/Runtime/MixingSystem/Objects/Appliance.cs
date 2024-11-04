@@ -2,7 +2,10 @@ using UnityEngine;
 
 public class Appliance : MonoBehaviour, IInteractable
 {
-    [SerializeField] private CookState m_cookState;
-    public void Interact() => EventBus<PassEvent<Appliance>>.Raise(new PassEvent<Appliance>(this));
-    public void Cook(Tray tray) => tray.Cook(m_cookState);
+    [SerializeField] private CookState _cookState;
+    
+    public void Grab() { }
+    public void DropOn<T>() => EventBus<DropOnObject<T, Appliance>>.Raise(new DropOnObject<T, Appliance>(this));
+
+    public void Cook(Tray tray) => tray.Cook(_cookState);
 }

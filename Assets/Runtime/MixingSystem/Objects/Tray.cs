@@ -3,27 +3,30 @@ using UnityEngine;
 
 public class Tray : MonoBehaviour, IInteractable
 {
-    private StateMachine m_stateMachine;
+    private StateMachine _stateMachine;
     public CookState @CookState { get; set; } = CookState.Raw;
     public HashSet<Ingredient> Ingredients { get; } = new();
 
     private void Awake()
     {
-        m_stateMachine = new StateMachine();
+        #region StateMachine
+        _stateMachine = new StateMachine();
         var rawState = new RawState(this);
         var cookedState = new CookedState(this);
         var friedState = new FriedState(this);
         var burntState = new BurntState(this);
-        m_stateMachine.AddTransition(rawState, cookedState, new CompareCondition<CookState>(CookState.Cooked));
-        m_stateMachine.AddTransition(rawState, friedState, new CompareCondition<CookState>(CookState.Fried));
-        m_stateMachine.AddTransition(cookedState, burntState, new CompareCondition<CookState>(CookState.Cooked));
-        m_stateMachine.AddTransition(cookedState, burntState, new CompareCondition<CookState>(CookState.Fried));
-        m_stateMachine.AddTransition(friedState, burntState, new CompareCondition<CookState>(CookState.Cooked));
-        m_stateMachine.AddTransition(friedState, burntState, new CompareCondition<CookState>(CookState.Fried));
-        m_stateMachine.SetState(rawState);
+        _stateMachine.AddTransition(rawState, cookedState, new CompareCondition<CookState>(CookState.Cooked));
+        _stateMachine.AddTransition(rawState, friedState, new CompareCondition<CookState>(CookState.Fried));
+        _stateMachine.AddTransition(cookedState, burntState, new CompareCondition<CookState>(CookState.Cooked));
+        _stateMachine.AddTransition(cookedState, burntState, new CompareCondition<CookState>(CookState.Fried));
+        _stateMachine.AddTransition(friedState, burntState, new CompareCondition<CookState>(CookState.Cooked));
+        _stateMachine.AddTransition(friedState, burntState, new CompareCondition<CookState>(CookState.Fried));
+        _stateMachine.SetState(rawState);
+        #endregion
     }
 
-    public void Interact() => EventBus<PassEvent<Tray>>.Raise(new PassEvent<Tray>(this));
-    public void AddToTray(Ingredient ingredient) => Ingredients.Add(ingredient);
-    public void Cook(CookState state) => m_stateMachine.Compare(state);
+    public void Grab() => EventBus<GrabObject<Tray>>.Raise(new GrabObject<Tray>(this));
+    public void DropOn<T>() => EventBus<DropOnObject<T, Tray>>.Raise(new DropOnObject<T, Tray>(this));
+    public void Add(Ingredient ingredient) => Ingredients.Add(ingredient);
+    public void Cook(CookState state) => _stateMachine.Compare(state);
 }

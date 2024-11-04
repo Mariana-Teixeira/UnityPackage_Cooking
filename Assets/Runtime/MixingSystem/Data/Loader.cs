@@ -2,19 +2,19 @@ using UnityEngine;
 
 public static class Loader
 {
-    private static Recipe[] m_recipes;
-    private static bool m_hasLoaded = false;
+    private static Recipe[] _recipes;
+    private static bool _hasLoaded = false;
 
     private static void Load()
     {
-        m_recipes = Resources.LoadAll<Recipe>("Recipes");
-        m_hasLoaded = true;
+        _recipes = Resources.LoadAll<Recipe>("Recipes");
+        _hasLoaded = true;
     }
 
     public static Recipe GetRandomRecipe()
     {
-        if (!m_hasLoaded) Load();
-        int index = Random.Range(0, m_recipes.Length);
-        return m_recipes[index];
+        if (!_hasLoaded) Load();
+        int index = Random.Range(0, _recipes.Length);
+        return _recipes[index];
     }
 }

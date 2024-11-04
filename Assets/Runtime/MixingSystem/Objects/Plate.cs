@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using Codice.Client.Commands.WkTree;
 using UnityEngine;
 
 public class Plate : MonoBehaviour, IInteractable
 {
     public readonly Dictionary<CookState, HashSet<Ingredient>> IngredientMap = new();
 
-    public void Interact() => EventBus<PassEvent<Plate>>.Raise(new PassEvent<Plate>(this));
+    public void Grab() => EventBus<GrabObject<Plate>>.Raise(new GrabObject<Plate>(this));
+    public void DropOn<T>() => EventBus<DropOnObject<T, Plate>>.Raise(new DropOnObject<T, Plate>(this));
 
     private HashSet<Ingredient> GetMap(CookState state)
     {
@@ -15,5 +15,4 @@ public class Plate : MonoBehaviour, IInteractable
     }
 
     public void AddToPlate(Tray tray) => GetMap(tray.CookState).UnionWith(tray.Ingredients);
-    public void AddToPlate(Ingredient ingredient) => GetMap(CookState.Raw).Add(ingredient);
 }
