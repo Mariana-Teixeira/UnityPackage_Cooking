@@ -1,18 +1,28 @@
-public struct GrabObject<T> : IEvent
+public struct GrabEvent<T> : IEvent where T : IGrab
 {
     public readonly T TargetObject;
 
-    public GrabObject(T targetObject)
+    public GrabEvent(T targetObject)
     {
           TargetObject = targetObject;
     }
 }
 
-public struct DropOnObject<T1, T2> : IEvent
+public struct DropEvent<T> : IEvent where T : IGrab
 {
-    public readonly T2 TargetObject;
+    public readonly T TargetObject;
 
-    public DropOnObject(T2 targetObject)
+    public DropEvent(T targetObject)
+    {
+        TargetObject = targetObject;
+    }
+}
+
+public struct UseEvent<T> : IEvent where T : IUse
+{
+    public readonly T TargetObject;
+
+    public UseEvent(T targetObject)
     {
         TargetObject = targetObject;
     }

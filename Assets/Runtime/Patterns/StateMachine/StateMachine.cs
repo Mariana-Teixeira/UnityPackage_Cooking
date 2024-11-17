@@ -6,9 +6,11 @@ public class StateMachine
     private readonly Dictionary<IState, Node> _nodes = new();
     private Node _currentNode;
 
-    public void Compare<T>(T target)
+    public IState CurrentState => _currentNode.State;
+
+    public void Evaluate()
     {
-        Transition transition = GetTransition(target);
+        Transition transition = GetTransition();
         if (transition != null)
         {
             ChangeState(transition.To);
@@ -20,9 +22,9 @@ public class StateMachine
         GetNode(from).AddTransition(GetNode(to).State, condition);
     }
 
-    private Transition GetTransition<T>(T target)
+    private Transition GetTransition()
     {
-        return _currentNode.Transitions.FirstOrDefault(transition => transition.Condition.Compare(target));
+        return _currentNode.Transitions.FirstOrDefault(transition => transition.Condition.Evaluate());
     }
     
     public void SetState(IState state)

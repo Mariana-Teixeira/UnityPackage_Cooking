@@ -1,12 +1,11 @@
 using System.Collections.Generic;
-using Codice.Client.Common.Connection;
+using UnityEngine;
 
 public static class EventBus<T> where T : IEvent
 {
     private static readonly HashSet<EventBinding<T>> _bindings = new();
-    
-    public static void Register(EventBinding<T> binding) =>  _bindings.Add(binding);
 
+    public static void Register(EventBinding<T> binding) => _bindings.Add(binding);
     public static void Deregister(EventBinding<T> binding) => _bindings.Remove(binding);
 
     public static void Raise(T @event)

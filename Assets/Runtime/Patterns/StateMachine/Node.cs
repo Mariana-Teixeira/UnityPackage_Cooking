@@ -11,6 +11,5 @@ public class Node
         Transitions = new HashSet<Transition>();
     }
 
-    public void AddTransition(IState to, ICondition condition)
-        => Transitions.Add(new Transition(State, to, condition));
+    public void AddTransition(IState to, ICondition condition) => Transitions.Add(new Transition(State, to, condition));
 }

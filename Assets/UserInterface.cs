@@ -1,61 +1,106 @@
-using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Rendering;
 using UnityEngine;
-using UnityEngine.Serialization;
+using GrabIngredient = GrabEvent<Storage>;
+using DropIngredient = DropEvent<Storage>;
+using GrabTray = GrabEvent<Tray>;
+using DropTray = DropEvent<Tray>;
+using GrabPlate = GrabEvent<Plate>;
+using DropPlate = DropEvent<Plate>;
+using UseTray = UseEvent<Tray>;
+using UseCooker = UseEvent<Appliance>;
 
 public class UserInterface : MonoBehaviour
 {
     [SerializeField] private TMP_Text _activeElement;
-    [SerializeField] private TMP_Text _contentTray;
+    private TMP_Text _textContent;
 
-    private HashSet<Ingredient> _ingredients;
-    
-    private EventBinding<GrabObject<Ingredient>> _grabIngredient;
-    private EventBinding<GrabObject<Tray>> _grabTray;
-    private EventBinding<GrabObject<Plate>> _grabPlate;
+    private EventBinding<GrabIngredient> _grabIngredientEvent;
+    private EventBinding<DropIngredient> _dropIngredientEvent;
+    private EventBinding<GrabTray> _grabTrayEvent;
+    private EventBinding<DropTray> _dropTrayEvent;
+    private EventBinding<GrabPlate> _grabPlateEvent;
+    private EventBinding<DropPlate> _dropPlateEvent;
+    private EventBinding<UseTray> _useTrayEvent;
+    private EventBinding<UseCooker> _useCookerEvent;
 
-    private EventBinding<DropOnObject<Ingredient, Tray>> _useTray;
-    
     private void Awake()
     {
-        _ingredients = new HashSet<Ingredient>();
-        
-        _grabIngredient = new EventBinding<GrabObject<Ingredient>>(GrabIngredient);
-        _grabTray = new EventBinding<GrabObject<Tray>>(tray => _activeElement.text = $"Active Tray:\n{tray.TargetObject.name}");
-        _grabPlate = new EventBinding<GrabObject<Plate>>(plate => _activeElement.text = $"Active Plate:\n{plate.TargetObject.name}");
-
-        _useTray = new EventBinding<DropOnObject<Ingredient, Tray>>(PrintIngredientsInTray);
+        _grabIngredientEvent = new EventBinding<GrabIngredient>(PrintGrab);
+        _dropIngredientEvent = new EventBinding<DropIngredient>(ClearGrab);
+        _grabTrayEvent = new EventBinding<GrabTray>(PrintGrab);
+        _dropTrayEvent = new EventBinding<DropTray>(ClearGrab);
+        _grabPlateEvent = new EventBinding<GrabPlate>(PrintGrab);
+        _dropPlateEvent = new EventBinding<DropPlate>(ClearGrab);
+        _useTrayEvent = new EventBinding<UseTray>(PrintUse);
+        _useCookerEvent = new EventBinding<UseCooker>(PrintUse);
     }
 
     private void OnEnable()
     {
-        EventBus<GrabObject<Ingredient>>.Register(_grabIngredient);
-        EventBus<GrabObject<Tray>>.Register(_grabTray);
-        EventBus<GrabObject<Plate>>.Register(_grabPlate);
-        
-        EventBus<DropOnObject<Ingredient, Tray>>.Register(_useTray);
+        EventBus<GrabIngredient>.Register(_grabIngredientEvent);
+        EventBus<DropIngredient>.Register(_dropIngredientEvent);
+        EventBus<GrabTray>.Register(_grabTrayEvent);
+        EventBus<DropTray>.Register(_dropTrayEvent);
+        EventBus<GrabPlate>.Register(_grabPlateEvent);
+        EventBus<DropPlate>.Register(_dropPlateEvent);
+        EventBus<UseTray>.Register(_useTrayEvent);
+        EventBus<UseCooker>.Register(_useCookerEvent);
     }
 
     private void OnDisable()
     {
-        EventBus<GrabObject<Ingredient>>.Deregister(_grabIngredient);
-        EventBus<GrabObject<Tray>>.Deregister(_grabTray);
-        EventBus<GrabObject<Plate>>.Deregister(_grabPlate);
-        
-        EventBus<DropOnObject<Ingredient, Tray>>.Deregister(_useTray);
+        EventBus<GrabIngredient>.Deregister(_grabIngredientEvent);
+        EventBus<DropIngredient>.Deregister(_dropIngredientEvent);
+        EventBus<GrabTray>.Deregister(_grabTrayEvent);
+        EventBus<DropTray>.Deregister(_dropTrayEvent);
+        EventBus<GrabPlate>.Deregister(_grabPlateEvent);
+        EventBus<DropPlate>.Deregister(_dropPlateEvent);
+        EventBus<UseTray>.Deregister(_useTrayEvent);
+        EventBus<UseCooker>.Deregister(_useCookerEvent);
     }
 
-    private void GrabIngredient(GrabObject<Ingredient> grabIngredient)
+    private void PrintGrab(GrabIngredient grabEvent)
     {
-        _activeElement.text = $"Active Ingredient:\n{grabIngredient.TargetObject.name}";
-        _ingredients.Add(grabIngredient.TargetObject);
+        _activeElement.text = grabEvent.TargetObject.Ingredient.name;
     }
 
-    private void PrintIngredientsInTray(DropOnObject<Ingredient, Tray> trayEvent)
+    private void PrintGrab(GrabTray grabEvent)
+    {
+        _activeElement.text = grabEvent.TargetObject.name;
+    }
+
+    private void PrintGrab(GrabPlate plateEvent)
+    {
+        _activeElement.text = plateEvent.TargetObject.name;
+    }
+    
+    private void ClearGrab(DropIngredient ingredientEvent)
     {
         _activeElement.text = string.Empty;
-        _contentTray.text = $"Content of {trayEvent.TargetObject.name}\n";
-        foreach (var ingredient in _ingredients) _contentTray.text += $"- {ingredient.name}\n";
+    }
+    
+    private void ClearGrab(DropTray trayEvent)
+    {
+        _activeElement.text = string.Empty;
+        trayEvent.TargetObject.ClearText();
+    }
+    
+    private void ClearGrab(DropPlate trayEvent)
+    {
+        _activeElement.text = string.Empty;
+    }
+    
+    private void PrintUse(UseTray trayEvent)
+    {
+        string content = string.Empty;
+        foreach (var ingredient in trayEvent.TargetObject.IngredientMap) content += $"{ingredient.name}\n";
+        trayEvent.TargetObject.WriteText(content);
+    }
+
+    private void PrintUse(UseCooker cookEvent)
+    {
+        string content = string.Empty;
+        foreach (var ingredient in cookEvent.TargetObject.Ingredients) content += $"{ingredient.name}\n";
+        cookEvent.TargetObject.WriteText(content);
     }
 }

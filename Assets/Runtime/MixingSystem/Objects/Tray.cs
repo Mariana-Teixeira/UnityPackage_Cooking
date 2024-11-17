@@ -1,32 +1,49 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using GrabEvent = GrabEvent<Tray>;
+using DropEvent = DropEvent<Tray>;
+using UseEvent = UseEvent<Tray>;
 
-public class Tray : MonoBehaviour, IInteractable
+public class Tray : MonoBehaviour, IGrab, IUse
 {
-    private StateMachine _stateMachine;
-    public CookState @CookState { get; set; } = CookState.Raw;
-    public HashSet<Ingredient> Ingredients { get; } = new();
+    private TMP_Text _textbox;
+    public HashSet<Ingredient> IngredientMap { get; } = new();
 
     private void Awake()
     {
-        #region StateMachine
-        _stateMachine = new StateMachine();
-        var rawState = new RawState(this);
-        var cookedState = new CookedState(this);
-        var friedState = new FriedState(this);
-        var burntState = new BurntState(this);
-        _stateMachine.AddTransition(rawState, cookedState, new CompareCondition<CookState>(CookState.Cooked));
-        _stateMachine.AddTransition(rawState, friedState, new CompareCondition<CookState>(CookState.Fried));
-        _stateMachine.AddTransition(cookedState, burntState, new CompareCondition<CookState>(CookState.Cooked));
-        _stateMachine.AddTransition(cookedState, burntState, new CompareCondition<CookState>(CookState.Fried));
-        _stateMachine.AddTransition(friedState, burntState, new CompareCondition<CookState>(CookState.Cooked));
-        _stateMachine.AddTransition(friedState, burntState, new CompareCondition<CookState>(CookState.Fried));
-        _stateMachine.SetState(rawState);
-        #endregion
+        _textbox = GetComponentInChildren<TMP_Text>();
     }
 
-    public void Grab() => EventBus<GrabObject<Tray>>.Raise(new GrabObject<Tray>(this));
-    public void DropOn<T>() => EventBus<DropOnObject<T, Tray>>.Raise(new DropOnObject<T, Tray>(this));
-    public void Add(Ingredient ingredient) => Ingredients.Add(ingredient);
-    public void Cook(CookState state) => _stateMachine.Compare(state);
+    public void Cook(CookState state)
+    {
+        
+    }
+
+    public void WriteText(string text)
+    {
+        _textbox.text = text;
+    }
+    public void ClearText()
+    {
+        _textbox.text = string.Empty;
+    }
+
+    public void Grab() => EventBus<GrabEvent>.Raise(new GrabEvent(this));
+    public void Drop()
+    {
+        IngredientMap.Clear();
+        EventBus<DropEvent>.Raise(new DropEvent(this));
+    }
+    public void Send(IUse user) => user.Receive(this);
+
+    public void Use(IGrab grab)
+    {
+        grab.Send(this);
+        EventBus<UseEvent>.Raise(new UseEvent(this));
+    }
+
+    public void Receive(Ingredient ingredient) => IngredientMap.Add(ingredient);   
+    public void Receive(Tray tray) { }
+    public void Receive(Plate plate) { }
 }

@@ -1,12 +1,20 @@
 using UnityEngine;
 using static UnityEngine.Screen;
 
-public interface IInteractable
+public interface IGrab
 {
     public void Grab();
-    public void DropOn<T>();
+    public void Drop();
+    public void Send(IUse user);
 }
 
+public interface IUse
+{
+    public void Use(IGrab grab);
+    public void Receive(Ingredient ingredient);
+    public void Receive(Tray tray);
+    public void Receive(Plate plate);
+}
 
 public class PlayerInteraction
 {
@@ -18,6 +26,9 @@ public class PlayerInteraction
 
     private enum SelectState { MouseOver, MouseLeave };
     private SelectState _currentSelectState;
+    
+    private SelectState GetState => _canSelect ? SelectState.MouseOver : SelectState.MouseLeave;
+    public Collider GetInteracted => _canSelect ? _hit.collider : null;
 
     public PlayerInteraction(Camera camera, LayerMask mask, float rayDistance)
     {
@@ -29,10 +40,7 @@ public class PlayerInteraction
     public void Update()
     {
         SelectionRaycaster();
-        CallWhenStateChange();
     }
-
-    public IInteractable GetInteracted() => _canSelect ? _hit.collider.GetComponent<IInteractable>() : null;
 
     private void SelectionRaycaster()
     {
@@ -40,8 +48,4 @@ public class PlayerInteraction
         var _lookingAtRay = _camera.ScreenPointToRay(centerViewport);
         _canSelect = Physics.Raycast(_lookingAtRay, out _hit, _rayDistance, _rayMask);
     }
-
-    private void CallWhenStateChange() => _currentSelectState = GetState();
-    
-    private SelectState GetState() => _canSelect ? SelectState.MouseOver : SelectState.MouseLeave;
 }

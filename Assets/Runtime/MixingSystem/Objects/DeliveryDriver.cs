@@ -1,22 +1,30 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UseEvent = UseEvent<DeliveryDriver>;
 
-public class DeliveryDriver : MonoBehaviour, IInteractable
+public class DeliveryDriver : MonoBehaviour, IUse
 {
+    private TMP_Text _textbox;
     private Recipe _requestedRecipe;
 
-    private void Start() => Request();
+    private void Awake()
+    {
+        _textbox = GetComponentInChildren<TMP_Text>();
+    }
 
-    public void Grab() { }
-    public void DropOn<T>() => EventBus<DropOnObject<T, DeliveryDriver>>.Raise(new DropOnObject<T, DeliveryDriver>(this));
+    private void Start()
+    {
+        Request();
+    }
 
     private void Request()
     {
         _requestedRecipe = Loader.GetRandomRecipe();
-        // Debug.Log("Requested: " + m_requestedRecipe.name);
+        _textbox.text = _requestedRecipe.name;
     }
 
-    public bool Deliver(Plate plate)
+    private bool Deliver(Plate plate)
     {
         var requested = _requestedRecipe._dish;
         var delivered = plate.IngredientMap;
@@ -31,5 +39,29 @@ public class DeliveryDriver : MonoBehaviour, IInteractable
         }
 
         return true;
+    }
+
+    public void Use(IGrab grab)
+    {
+        grab.Send(this);
+        EventBus<UseEvent>.Raise(new UseEvent(this));
+    }
+
+    public void Receive(Ingredient ingredient) { }
+
+    public void Receive(Tray tray) { }
+
+    public void Receive(Plate plate)
+    {
+        if (Deliver(plate))
+        {
+            Debug.Log("Delivered!");
+            Request();
+        }
+        else
+        {
+            Debug.Log("Wrong Delivery...");
+            Request();
+        }
     }
 }

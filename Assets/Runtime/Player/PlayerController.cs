@@ -1,11 +1,8 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public IInteractable Interactable;
-    
     private StateMachine _stateMachine;
     
     private PlayerMovement _playerMovement;
@@ -16,20 +13,25 @@ public class PlayerController : MonoBehaviour
     
     [SerializeField] private float _rayDistance;
     [SerializeField] private float _moveSpeed;
+
+    private Collider _interacted;
+    private IGrab _holdingObject;
+
+    private IGrab _interactedGrab => _interacted ? _interacted.GetComponent<IGrab>() : null;
+    private IUse _interactedUse => _interacted ? _interacted.GetComponent<IUse>() : null;
     
     private void Awake()
     {
         #region State Machine
         _stateMachine = new StateMachine();
-        var emptyHanded = new EmptyHanded();
-        var grabIngredient = new GrabState<Storage>(this);
-        var grabTray = new GrabState<Tray>(this);
-        var ingredientOnTray = new DropOnState<Ingredient, Tray>(this);
-        var trayOnAppliance = new DropOnState<Tray, Appliance>(this);
-        _stateMachine.AddTransition(emptyHanded, grabIngredient, new CompareCondition<Type>(typeof(Storage)));
-        _stateMachine.AddTransition(grabIngredient, ingredientOnTray, new CompareCondition<Type>(typeof(Tray)));
-        _stateMachine.AddTransition(ingredientOnTray, emptyHanded, new InvokeCondition(() => true));
-        _stateMachine.SetState(emptyHanded);
+        var empty = new EmptyState(this);
+        var grab = new GrabState(this);
+        var use = new UseState(this);
+        _stateMachine.AddTransition(empty, grab, new Predicate(() => _interactedGrab != null));
+        _stateMachine.AddTransition(grab, empty, new Predicate(() => _interactedGrab != null && _holdingObject != null && _interactedGrab.GetType() == _holdingObject.GetType()));
+        _stateMachine.AddTransition(grab, use, new Predicate(() => _interactedUse != null));
+        _stateMachine.AddTransition(use, empty, new Predicate(() => _interactedGrab == null && _interactedUse == null));
+        _stateMachine.SetState(empty);
         #endregion
         
         var layerMask = LayerMask.GetMask("Interactable");
@@ -50,21 +52,29 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         _playerInteraction.Update();
-        _playerMovement.Update(this.transform, _moveSpeed, _inputDirection, _mouseDelta);
+        _playerMovement.Update(transform, _moveSpeed, _inputDirection, _mouseDelta);
+        _stateMachine.Evaluate();
     }
     
-    public void CheckConditions()
+    public void Grab()
     {
-        if (Interactable == null) return;
-        _stateMachine.Compare(Interactable.GetType());
+        _holdingObject = _interactedGrab;
+        _holdingObject.Grab();
     }
-    
+
+    public void Drop()
+    {
+        _holdingObject.Drop();
+        _holdingObject = null;
+    }
+
+    public void Use()
+    {
+        _interactedUse.Use(_holdingObject);
+    }
+
     public void OnMove(InputValue value) => _inputDirection = value.Get<Vector2>();
     public void OnLook(InputValue value) => _mouseDelta = value.Get<Vector2>();
-
-    public void OnInteract()
-    {
-        Interactable = _playerInteraction.GetInteracted();
-        CheckConditions();
-    }
+    public void OnInteract() => _interacted = _playerInteraction.GetInteracted;
+    public void OnClearInteract() => _interacted = null;
 }

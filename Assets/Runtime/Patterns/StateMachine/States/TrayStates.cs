@@ -8,9 +8,7 @@ public struct RawState : IState
     }
 
     public void OnEnter()
-    {
-        _tray.CookState = CookState.Raw;
-    }
+    { }
 
     public void Update()
     { }
@@ -29,9 +27,7 @@ public readonly struct CookedState : IState
     }   
     
     public void OnEnter()
-    {
-        _tray.CookState = CookState.Cooked;
-    }
+    { }
 
     public void Update()
     { }
@@ -50,9 +46,7 @@ public readonly struct FriedState : IState
     }
     
     public void OnEnter()
-    {
-        _tray.CookState = CookState.Fried;
-    }
+    { }
 
     public void Update()
     { }
@@ -71,9 +65,7 @@ public readonly struct BurntState : IState
     }
     
     public void OnEnter()
-    {
-        _tray.CookState = CookState.Burnt;
-    }
+    { }
 
     public void Update()
     { }
