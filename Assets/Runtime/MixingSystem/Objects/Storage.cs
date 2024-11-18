@@ -9,6 +9,5 @@ public class Storage : MonoBehaviour, IGrab
 
     public void Grab() => EventBus<GrabEvent>.Raise(new GrabEvent(this));
     public void Drop() => EventBus<DropEvent>.Raise(new DropEvent(this));
-
-    public void Send(IUse user) => user.Receive(_ingredient);
+    public void Send(IContainer user) => user.Receive(_ingredient);
 }

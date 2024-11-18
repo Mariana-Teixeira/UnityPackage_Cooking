@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ad507191d350a446b1889eff3e4a67e, type: 3}
   m_Name: BacalhauSnack
   m_EditorClassIdentifier: 
-  m_dish:
-  - State: 1
+  _dish:
+  - State: 0
     Ingredients:
     - {fileID: 11400000, guid: d3df5fc4fe6374c43ba05466f899b6a0, type: 2}
+    - {fileID: 11400000, guid: 5c55d6e11fcdda145887460b5e92bbe0, type: 2}

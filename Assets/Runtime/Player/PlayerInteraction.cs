@@ -1,21 +1,6 @@
 using UnityEngine;
 using static UnityEngine.Screen;
 
-public interface IGrab
-{
-    public void Grab();
-    public void Drop();
-    public void Send(IUse user);
-}
-
-public interface IUse
-{
-    public void Use(IGrab grab);
-    public void Receive(Ingredient ingredient);
-    public void Receive(Tray tray);
-    public void Receive(Plate plate);
-}
-
 public class PlayerInteraction
 {
     private RaycastHit _hit;

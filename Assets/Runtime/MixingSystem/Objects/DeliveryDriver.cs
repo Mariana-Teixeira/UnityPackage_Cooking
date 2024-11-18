@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UseEvent = UseEvent<DeliveryDriver>;
+using EmptyDriver = EmptyEvent<DeliveryDriver>;
 
-public class DeliveryDriver : MonoBehaviour, IUse
+public class DeliveryDriver : MonoBehaviour, IContainer
 {
     private TMP_Text _textbox;
     private Recipe _requestedRecipe;
+    private Plate _deliveredPlate;
 
     private void Awake()
     {
@@ -22,6 +23,27 @@ public class DeliveryDriver : MonoBehaviour, IUse
     {
         _requestedRecipe = Loader.GetRandomRecipe();
         _textbox.text = _requestedRecipe.name;
+    }
+
+    private void AddToDelivery(Plate plate)
+    {
+        _deliveredPlate = plate;
+        CheckDelivery();
+    }
+
+    private void RemoveFromDelivery()
+    {
+        _deliveredPlate = null;
+        EventBus<EmptyDriver>.Raise(new EmptyDriver(this));
+    }
+    
+    private void CheckDelivery()
+    {
+        var isCorrect = Deliver(_deliveredPlate);
+        EventBus<DeliverEvent>.Raise(new DeliverEvent(isCorrect));
+        Request();
+        
+        _deliveredPlate.Empty();
     }
 
     private bool Deliver(Plate plate)
@@ -41,27 +63,9 @@ public class DeliveryDriver : MonoBehaviour, IUse
         return true;
     }
 
-    public void Use(IGrab grab)
-    {
-        grab.Send(this);
-        EventBus<UseEvent>.Raise(new UseEvent(this));
-    }
-
+    public void Empty() => RemoveFromDelivery();
+    public void Store(IGrab grab) => grab.Send(this);
     public void Receive(Ingredient ingredient) { }
-
     public void Receive(Tray tray) { }
-
-    public void Receive(Plate plate)
-    {
-        if (Deliver(plate))
-        {
-            Debug.Log("Delivered!");
-            Request();
-        }
-        else
-        {
-            Debug.Log("Wrong Delivery...");
-            Request();
-        }
-    }
+    public void Receive(Plate plate) => AddToDelivery(plate);
 }

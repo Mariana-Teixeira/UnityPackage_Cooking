@@ -18,20 +18,26 @@ public class PlayerController : MonoBehaviour
     private IGrab _holdingObject;
 
     private IGrab _interactedGrab => _interacted ? _interacted.GetComponent<IGrab>() : null;
-    private IUse _interactedUse => _interacted ? _interacted.GetComponent<IUse>() : null;
+    private IContainer _interactContainer => _interacted ? _interacted.GetComponent<IContainer>() : null;
+    private IStatic _interactedStatic => _interacted ? _interacted.GetComponent<IStatic>() : null;
+    private bool IsInteractingWithHoldingObject => _interactedGrab.GetHashCode() == _holdingObject.GetHashCode();
     
     private void Awake()
     {
         #region State Machine
         _stateMachine = new StateMachine();
-        var empty = new EmptyState(this);
+        var idle = new IdleState(this);
         var grab = new GrabState(this);
         var use = new UseState(this);
-        _stateMachine.AddTransition(empty, grab, new Predicate(() => _interactedGrab != null));
-        _stateMachine.AddTransition(grab, empty, new Predicate(() => _interactedGrab != null && _holdingObject != null && _interactedGrab.GetType() == _holdingObject.GetType()));
-        _stateMachine.AddTransition(grab, use, new Predicate(() => _interactedUse != null));
-        _stateMachine.AddTransition(use, empty, new Predicate(() => _interactedGrab == null && _interactedUse == null));
-        _stateMachine.SetState(empty);
+        var store = new StoreState(this);
+        var drop = new DropState(this);
+        _stateMachine.AddTransition(idle, grab, new Predicate(() => _interactedGrab != null));
+        _stateMachine.AddTransition(idle, use, new Predicate(() => _interactedStatic != null));
+        _stateMachine.AddTransition(grab, store, new Predicate(() => _interactContainer != null && (_interactedGrab == null || !IsInteractingWithHoldingObject)));
+        _stateMachine.AddTransition(store, drop, new Predicate(() => true));
+        _stateMachine.AddTransition(drop, idle, new Predicate(() => true));
+        _stateMachine.AddTransition(use, idle, new Predicate(() => true));
+        _stateMachine.SetState(idle);
         #endregion
         
         var layerMask = LayerMask.GetMask("Interactable");
@@ -62,19 +68,26 @@ public class PlayerController : MonoBehaviour
         _holdingObject.Grab();
     }
 
+    public void Use()
+    {
+        _interactedStatic.Use();
+        _interacted = null;
+    }
+
+    public void Store()
+    {
+        _interactContainer.Store(_holdingObject);
+        _interacted = null;
+    }
+    
     public void Drop()
     {
         _holdingObject.Drop();
         _holdingObject = null;
-    }
-
-    public void Use()
-    {
-        _interactedUse.Use(_holdingObject);
+        _interacted = null;
     }
 
     public void OnMove(InputValue value) => _inputDirection = value.Get<Vector2>();
     public void OnLook(InputValue value) => _mouseDelta = value.Get<Vector2>();
     public void OnInteract() => _interacted = _playerInteraction.GetInteracted;
-    public void OnClearInteract() => _interacted = null;
 }

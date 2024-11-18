@@ -12,13 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ad507191d350a446b1889eff3e4a67e, type: 3}
   m_Name: BacalhauFrito
   m_EditorClassIdentifier: 
-  m_dish:
+  _dish:
   - State: 2
     Ingredients:
     - {fileID: 11400000, guid: d3df5fc4fe6374c43ba05466f899b6a0, type: 2}
-    - {fileID: 11400000, guid: 5c55d6e11fcdda145887460b5e92bbe0, type: 2}
-    Categories: 
-  - State: 1
+    - {fileID: 11400000, guid: a3ea9dcaec54a9d49b3b82ba830a0d53, type: 2}
+  - State: 0
     Ingredients:
-    - {fileID: 11400000, guid: dde419b893cde524d93b095c700bb788, type: 2}
-    Categories: 02000000
+    - {fileID: 11400000, guid: 5c55d6e11fcdda145887460b5e92bbe0, type: 2}

@@ -18,12 +18,32 @@ public struct DropEvent<T> : IEvent where T : IGrab
     }
 }
 
-public struct UseEvent<T> : IEvent where T : IUse
+public struct StoreEvent<T> : IEvent where T : IContainer
 {
     public readonly T TargetObject;
 
-    public UseEvent(T targetObject)
+    public StoreEvent(T targetObject)
     {
         TargetObject = targetObject;
+    }
+}
+
+public struct EmptyEvent<T> : IEvent where T : IContainer
+{
+    public readonly T TargetObject;
+
+    public EmptyEvent(T targetObject)
+    {
+        TargetObject = targetObject;
+    }
+}
+
+public struct DeliverEvent : IEvent
+{
+    public readonly bool IsCorrect;
+
+    public DeliverEvent(bool isCorrect)
+    {
+        IsCorrect = isCorrect;
     }
 }
