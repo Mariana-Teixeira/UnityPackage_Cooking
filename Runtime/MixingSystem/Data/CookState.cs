@@ -1,7 +1,10 @@
-public enum CookState
+namespace CookingSystem
 {
-    Raw,
-    Cooked,
-    Fried,
-    Burnt
+    public enum CookState
+    {
+        Raw,
+        Cooked,
+        Fried,
+        Burnt
+    }
 }

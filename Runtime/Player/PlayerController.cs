@@ -1,7 +1,10 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using CookingSystem;
 
-public class PlayerController : MonoBehaviour
+namespace CookingSystem
+{
+    public class PlayerController : MonoBehaviour
 {
     private StateMachine _stateMachine;
     
@@ -90,4 +93,5 @@ public class PlayerController : MonoBehaviour
     public void OnMove(InputValue value) => _inputDirection = value.Get<Vector2>();
     public void OnLook(InputValue value) => _mouseDelta = value.Get<Vector2>();
     public void OnInteract() => _interacted = _playerInteraction.GetInteracted;
+}
 }

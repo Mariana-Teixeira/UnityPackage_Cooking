@@ -1,0 +1,12 @@
+{
+    "name": "com.marianateixeira.cookingsystem",
+    "version": "0.0.1",
+    "displayName": "Cooking System",
+    "description": "Cooking System built for quick-prototyping.",
+    "unity": "6000.0",
+    "author": {
+        "name": "Mariana Teixeira",
+        "email": "teixeira.marianareis@gmail.com",
+        "url": "https://www.mariana-teixeira.com"
+    }
+}

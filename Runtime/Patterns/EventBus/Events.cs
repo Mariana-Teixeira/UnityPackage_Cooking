@@ -1,49 +1,52 @@
-public struct GrabEvent<T> : IEvent where T : IGrab
+namespace CookingSystem
 {
-    public readonly T TargetObject;
-
-    public GrabEvent(T targetObject)
+    public struct GrabEvent<T> : IEvent where T : IGrab
     {
-          TargetObject = targetObject;
+        public readonly T TargetObject;
+
+        public GrabEvent(T targetObject)
+        {
+            TargetObject = targetObject;
+        }
     }
-}
 
-public struct DropEvent<T> : IEvent where T : IGrab
-{
-    public readonly T TargetObject;
-
-    public DropEvent(T targetObject)
+    public struct DropEvent<T> : IEvent where T : IGrab
     {
-        TargetObject = targetObject;
+        public readonly T TargetObject;
+
+        public DropEvent(T targetObject)
+        {
+            TargetObject = targetObject;
+        }
     }
-}
 
-public struct StoreEvent<T> : IEvent where T : IContainer
-{
-    public readonly T TargetObject;
-
-    public StoreEvent(T targetObject)
+    public struct StoreEvent<T> : IEvent where T : IContainer
     {
-        TargetObject = targetObject;
+        public readonly T TargetObject;
+
+        public StoreEvent(T targetObject)
+        {
+            TargetObject = targetObject;
+        }
     }
-}
 
-public struct EmptyEvent<T> : IEvent where T : IContainer
-{
-    public readonly T TargetObject;
-
-    public EmptyEvent(T targetObject)
+    public struct EmptyEvent<T> : IEvent where T : IContainer
     {
-        TargetObject = targetObject;
+        public readonly T TargetObject;
+
+        public EmptyEvent(T targetObject)
+        {
+            TargetObject = targetObject;
+        }
     }
-}
 
-public struct DeliverEvent : IEvent
-{
-    public readonly bool IsCorrect;
-
-    public DeliverEvent(bool isCorrect)
+    public struct DeliverEvent : IEvent
     {
-        IsCorrect = isCorrect;
-    }
+        public readonly bool IsCorrect;
+
+        public DeliverEvent(bool isCorrect)
+        {
+            IsCorrect = isCorrect;
+        }
+    }   
 }

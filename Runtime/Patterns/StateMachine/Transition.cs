@@ -1,13 +1,16 @@
-public class Transition
+namespace CookingSystem
 {
-    public readonly IState From;
-    public readonly IState To;
-    public readonly ICondition Condition;
-
-    public Transition(IState from, IState to, ICondition condition)
+    public class Transition
     {
-        From = from;
-        To = to;
-        Condition = condition;
-    }
+        public readonly IState From;
+        public readonly IState To;
+        public readonly ICondition Condition;
+
+        public Transition(IState from, IState to, ICondition condition)
+        {
+            From = from;
+            To = to;
+            Condition = condition;
+        }
+    }   
 }

@@ -1,4 +1,7 @@
-public interface IStatic
+namespace CookingSystem
 {
-    public void Use();
+    public interface IStatic
+    {
+        public void Use();
+    }   
 }

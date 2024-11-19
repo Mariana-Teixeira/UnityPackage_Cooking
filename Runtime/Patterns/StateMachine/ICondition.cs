@@ -1,22 +1,25 @@
 using System;
 
-public interface ICondition
+namespace CookingSystem
 {
-    public Func<bool> Condition { get; }
-    public bool Evaluate();
-}
-
-public class Predicate : ICondition
-{
-    public Func<bool> Condition { get; }
-
-    public Predicate(Func<bool> condition)
+    public interface ICondition
     {
-        Condition = condition;
+        public Func<bool> Condition { get; }
+        public bool Evaluate();
     }
 
-    public bool Evaluate()
+    public class Predicate : ICondition
     {
-        return Condition.Invoke();
-    }
+        public Func<bool> Condition { get; }
+
+        public Predicate(Func<bool> condition)
+        {
+            Condition = condition;
+        }
+
+        public bool Evaluate()
+        {
+            return Condition.Invoke();
+        }
+    }   
 }

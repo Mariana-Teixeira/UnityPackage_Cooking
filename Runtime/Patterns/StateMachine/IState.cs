@@ -1,6 +1,9 @@
-public interface IState
+namespace CookingSystem
 {
-    public void OnEnter();
-    public void Update();
-    public void OnExit();
+    public interface IState
+    {
+        public void OnEnter();
+        public void Update();
+        public void OnExit();
+    }   
 }
