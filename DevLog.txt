@@ -1,4 +1,0 @@
-31-10
-* Definir as estruturas de dados para os elementos principais do sistema (ingredients, comidas, receitas).
-02-11
-* Cook a simple dish and search for corresponding recipes.
