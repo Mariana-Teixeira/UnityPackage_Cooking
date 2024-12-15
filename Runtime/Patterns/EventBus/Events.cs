@@ -1,25 +1,5 @@
 namespace CookingSystem
 {
-    public struct GrabEvent<T> : IEvent where T : IGrab
-    {
-        public readonly T TargetObject;
-
-        public GrabEvent(T targetObject)
-        {
-            TargetObject = targetObject;
-        }
-    }
-
-    public struct DropEvent<T> : IEvent where T : IGrab
-    {
-        public readonly T TargetObject;
-
-        public DropEvent(T targetObject)
-        {
-            TargetObject = targetObject;
-        }
-    }
-
     public struct StoreEvent<T> : IEvent where T : IContainer
     {
         public readonly T TargetObject;
@@ -40,13 +20,13 @@ namespace CookingSystem
         }
     }
 
-    public struct DeliverEvent : IEvent
+    public struct DeliverEvent<T> : IEvent where T : IContainer
     {
-        public readonly bool IsCorrect;
+        public readonly T TargetObject;
 
-        public DeliverEvent(bool isCorrect)
+        public DeliverEvent(T targetObject)
         {
-            IsCorrect = isCorrect;
+            TargetObject = targetObject;
         }
-    }   
+    }
 }

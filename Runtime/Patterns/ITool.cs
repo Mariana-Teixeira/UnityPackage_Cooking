@@ -1,7 +1,7 @@
 namespace CookingSystem
 {
-    public interface IStatic
+    public interface ITool
     {
         public void Use();
-    }   
+    }
 }

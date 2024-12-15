@@ -1,54 +1,47 @@
-using TMPro;
 using UnityEngine;
 
 namespace CookingSystem
 {
-    using StoreEvent = StoreEvent<Appliance>;
-    using EmptyEvent = EmptyEvent<Appliance>;
-    
-    public class Appliance : MonoBehaviour, IContainer, IStatic
+    public class Appliance : IContainer, ITool
     {
-        [SerializeField] private CookState _cookState;
+        private readonly CookState _cookState;
         private Tray _currentTray;
-        private TMP_Text _textbox;
 
-        public Tray GetTray => _currentTray;
-
-        private void Awake()
+        public Appliance(CookState cookState)
         {
-            _textbox = GetComponentInChildren<TMP_Text>();
+            _cookState = cookState;
         }
 
-        private void AddToAppliance(Tray tray)
+        public Appliance(CookState cookState, Tray currentTray)
+        {
+            _cookState = cookState;
+            _currentTray = currentTray;
+        }
+
+        private void Add(IProduct product)
+        {
+            if (product is Tray tray) Add(tray);
+        }
+
+        private void Add(Tray tray)
         {
             _currentTray = tray;
-            EventBus<StoreEvent>.Raise(new StoreEvent(this));
         }
 
-        private void Cook()
-        {
-            _currentTray?.Cook(_cookState);
-        }
-
-        private void EmptyAppliance()
+        private void Clear()
         {
             _currentTray = null;
-            EventBus<EmptyEvent>.Raise(new EmptyEvent(this));
         }
-
-        public void WriteText(string text) => _textbox.text = text;
-        public void ClearText() => _textbox.text = this.name;
-
-        public void Empty() => EmptyAppliance();
-        public void Store(IGrab grab) => grab.Send(this);
-        public void Receive(Ingredient ingredient) { }
-        public void Receive(Tray tray) => AddToAppliance(tray);
-        public void Receive(Plate plate) { }
-
-        public void Use()
+        
+        private void Cook()
         {
-            Cook();
-            Empty();
+            _currentTray?.ChangeState(_cookState);
         }
+
+        #region Interface Functions
+        public void Empty() => Clear();
+        public void Store(IProduct product) => Add(product);
+        public void Use() => Cook();
+        #endregion
     }   
 }

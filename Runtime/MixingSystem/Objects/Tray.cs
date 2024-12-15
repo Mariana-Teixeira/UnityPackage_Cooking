@@ -1,54 +1,36 @@
 using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
 
 namespace CookingSystem
 {
-    using GrabEvent = GrabEvent<Tray>;
-    using DropEvent = DropEvent<Tray>;
-    using StoreEvent = StoreEvent<Tray>;
-    using EmptyEvent = EmptyEvent<Tray>;
-
-    public class Tray : MonoBehaviour, IGrab, IContainer
+    public class Tray : IContainer, IProduct
     {
-        private TMP_Text _textbox;
         public CookState CurrentState { get; private set; } = CookState.Raw;
-        public HashSet<Ingredient> IngredientMap { get; } = new();
+        public HashSet<IngredientSO> IngredientMap { get; } = new();
 
-        private void Awake()
+        private void Add(IProduct product)
         {
-            _textbox = GetComponentInChildren<TMP_Text>();
+            if (product is Ingredient ingredient) Add(ingredient);
         }
-
-        private void AddToTray(Ingredient ingredient)
+        
+        private void Add(Ingredient ingredient)
         {
-            IngredientMap.Add(ingredient);
-            EventBus<StoreEvent>.Raise(new StoreEvent(this));
+            IngredientMap.Add(ingredient.GetIngredient);
         }
-
-        public void Cook(CookState state)
-        {
-            CurrentState = state;
-        }
-
-        private void EmptyTray()
+        
+        private void Clear()
         {
             IngredientMap.Clear();
             CurrentState = CookState.Raw;
-            EventBus<EmptyEvent>.Raise(new EmptyEvent(this));
         }
 
-        public void WriteText(string text) => _textbox.text = text;
-        public void ClearText() => _textbox.text = $"{this.name}: {CurrentState}";
-
-        public void Grab() => EventBus<GrabEvent>.Raise(new GrabEvent(this));
-        public void Drop() => EventBus<DropEvent>.Raise(new DropEvent(this));
-        public void Send(IContainer user) => user.Receive(this);
-
-        public void Empty() => EmptyTray();
-        public void Store(IGrab grab) => grab.Send(this);
-        public void Receive(Ingredient ingredient) => AddToTray(ingredient);
-        public void Receive(Tray tray) { }
-        public void Receive(Plate plate) => plate.AddToPlate(this);
+        public void ChangeState(CookState state)
+        {
+            CurrentState = state;   
+        }
+        
+        #region Interface Functions
+        public void Empty() => Clear();
+        public void Store(IProduct product) => Add(product);
+        #endregion
     }
 }
