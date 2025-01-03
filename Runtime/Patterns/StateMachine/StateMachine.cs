@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CookingSystem
+namespace CookingSystem.States
 {
     public class StateMachine
     {

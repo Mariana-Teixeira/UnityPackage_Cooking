@@ -28,7 +28,7 @@ namespace CookingSystem
      
             foreach (var requirement in requested)
             {
-                CookState requestedState = requirement.State;
+                DishState requestedState = requirement.State;
                 var requestedIngredients = new HashSet<IngredientSO>(requirement.Ingredients);
      
                 if (!delivered.TryGetValue(requestedState, out var deliveredIngredients)) return false;

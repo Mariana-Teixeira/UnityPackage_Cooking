@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace CookingSystem
+namespace CookingSystem.States
 {
     public class Node
     {

@@ -4,7 +4,7 @@ namespace CookingSystem
 {
     public class Tray : IContainer, IProduct
     {
-        public CookState CurrentState { get; private set; } = CookState.Raw;
+        public DishState CurrentState { get; private set; } = DishState.Raw;
         public HashSet<IngredientSO> IngredientMap { get; } = new();
 
         private void Add(IProduct product)
@@ -20,10 +20,10 @@ namespace CookingSystem
         private void Clear()
         {
             IngredientMap.Clear();
-            CurrentState = CookState.Raw;
+            CurrentState = DishState.Raw;
         }
 
-        public void ChangeState(CookState state)
+        public void ChangeState(DishState state)
         {
             CurrentState = state;   
         }

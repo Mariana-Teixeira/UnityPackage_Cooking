@@ -13,7 +13,7 @@ namespace CookingSystem
     [Serializable]
     public struct Requirements
     {
-        public CookState State;
+        public DishState State;
         public IngredientSO[] Ingredients;
     }   
 }

@@ -1,4 +1,4 @@
-namespace CookingSystem
+namespace CookingSystem.Events
 {
     public struct StoreEvent<T> : IEvent where T : IContainer
     {

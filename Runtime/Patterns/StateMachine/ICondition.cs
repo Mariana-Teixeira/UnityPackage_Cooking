@@ -1,6 +1,6 @@
 using System;
 
-namespace CookingSystem
+namespace CookingSystem.States
 {
     public interface ICondition
     {

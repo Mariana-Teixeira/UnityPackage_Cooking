@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace CookingSystem
+namespace CookingSystem.Events
 {
     public static class EventBus<T> where T : IEvent
     {

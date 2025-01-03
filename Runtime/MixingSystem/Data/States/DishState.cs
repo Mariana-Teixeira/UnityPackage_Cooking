@@ -1,6 +1,6 @@
 namespace CookingSystem
 {
-    public enum CookState
+    public enum DishState
     {
         Raw,
         Cooked,

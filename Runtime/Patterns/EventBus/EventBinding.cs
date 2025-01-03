@@ -1,6 +1,6 @@
 using System;
 
-namespace CookingSystem
+namespace CookingSystem.Events
 {
     public interface IEvent { }
 

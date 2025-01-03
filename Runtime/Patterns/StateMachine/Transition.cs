@@ -1,4 +1,4 @@
-namespace CookingSystem
+namespace CookingSystem.States
 {
     public class Transition
     {

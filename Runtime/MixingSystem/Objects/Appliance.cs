@@ -1,20 +1,18 @@
-using UnityEngine;
-
 namespace CookingSystem
 {
     public class Appliance : IContainer, ITool
     {
-        private readonly CookState _cookState;
+        private readonly DishState _dishState;
         private Tray _currentTray;
 
-        public Appliance(CookState cookState)
+        public Appliance(DishState dishState)
         {
-            _cookState = cookState;
+            _dishState = dishState;
         }
 
-        public Appliance(CookState cookState, Tray currentTray)
+        public Appliance(DishState dishState, Tray currentTray)
         {
-            _cookState = cookState;
+            _dishState = dishState;
             _currentTray = currentTray;
         }
 
@@ -35,7 +33,7 @@ namespace CookingSystem
         
         private void Cook()
         {
-            _currentTray?.ChangeState(_cookState);
+            _currentTray?.ChangeState(_dishState);
         }
 
         #region Interface Functions

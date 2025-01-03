@@ -4,7 +4,7 @@ namespace CookingSystem
 { 
     public class Dish : IContainer, IProduct
     {
-        public Dictionary<CookState, HashSet<IngredientSO>> IngredientMap { get; } = new();
+        public Dictionary<DishState, HashSet<IngredientSO>> IngredientMap { get; } = new();
 
         private void Add(IProduct product)
         {
@@ -14,7 +14,7 @@ namespace CookingSystem
 
         private void Add(Ingredient ingredient)
         {
-            GetMap(CookState.Raw).Add(ingredient.GetIngredient);
+            GetMap(DishState.Raw).Add(ingredient.GetIngredient);
         }
         
         private void Add(Tray tray)
@@ -27,7 +27,7 @@ namespace CookingSystem
             IngredientMap.Clear();
         }
         
-        private HashSet<IngredientSO> GetMap(CookState state)
+        private HashSet<IngredientSO> GetMap(DishState state)
         {
             if (!IngredientMap.ContainsKey(state)) IngredientMap.Add(state, new HashSet<IngredientSO>());
             return IngredientMap[state];
