@@ -38,6 +38,11 @@ namespace CookingSystem
              _requestedRecipeSO = Loader.GetRandomRecipe();
              Debug.Log(_requestedRecipeSO.name);
          }
+
+         public void Request(RecipeSO requestRecipe)
+         {
+             _requestedRecipeSO = requestRecipe;
+         }
          
          #region Interface Functions
          public void Empty() => Clear();
