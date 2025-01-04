@@ -17,5 +17,5 @@ namespace CookingSystem.Events
                 binding.OnEventNoArgs?.Invoke();
             }
         }
-    }   
+    }
 }

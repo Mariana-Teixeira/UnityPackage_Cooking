@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CookingSystem
 {
-    public static class Loader
+    internal static class Loader
     {
         private static RecipeSO[] _recipes;
         private static bool _hasLoaded = false;
@@ -14,21 +14,21 @@ namespace CookingSystem
             _hasLoaded = true;
         }
 
-        public static RecipeSO GetRandomRecipe()
+        internal static RecipeSO GetRandomRecipe()
         {
             if (!_hasLoaded) Load();
             int index = Random.Range(0, _recipes.Length);
             return _recipes[index];
         }
         
-        public static bool Compare(Dish dish, RecipeSO recipe)
+        internal static bool Compare(Dish dish, RecipeSO recipe)
         {
             var requested = recipe.Instructions;
             var delivered = dish.IngredientMap;
      
             foreach (var requirement in requested)
             {
-                DishState requestedState = requirement.State;
+                FoodState requestedState = requirement.State;
                 var requestedIngredients = new HashSet<IngredientSO>(requirement.Ingredients);
      
                 if (!delivered.TryGetValue(requestedState, out var deliveredIngredients)) return false;
