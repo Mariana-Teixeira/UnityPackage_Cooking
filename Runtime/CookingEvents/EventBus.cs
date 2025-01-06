@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace CookingSystem.Events
 {
-    public static class EventBus<T> where T : IEvent
+    public static class EventBus<T> where T : ICookEvent
     {
         private static readonly HashSet<EventBinding<T>> _bindings = new();
 

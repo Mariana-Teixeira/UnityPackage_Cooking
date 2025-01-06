@@ -1,7 +1,8 @@
 using System;
+using CookingSystem.State;
 using UnityEngine;
 
-namespace CookingSystem
+namespace CookingSystem.Data
 {
     [CreateAssetMenu(fileName = "Recipe", menuName = "Cooking/Recipe")]
     public class RecipeSO : ScriptableObject

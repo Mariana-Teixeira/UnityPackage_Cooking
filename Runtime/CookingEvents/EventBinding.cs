@@ -2,9 +2,9 @@ using System;
 
 namespace CookingSystem.Events
 {
-    public interface IEvent { }
+    public interface ICookEvent { }
 
-    public class EventBinding<T> where T : IEvent
+    public class EventBinding<T> where T : ICookEvent
     {
         public Action<T> OnEvent { get; }
         public Action OnEventNoArgs { get; }

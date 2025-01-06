@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using CookingSystem.State;
 using UnityEngine;
 
-namespace CookingSystem
+namespace CookingSystem.Data
 {
     internal static class Loader
     {
@@ -17,14 +18,14 @@ namespace CookingSystem
         internal static RecipeSO GetRandomRecipe()
         {
             if (!_hasLoaded) Load();
-            int index = Random.Range(0, _recipes.Length);
+            var index = Random.Range(0, _recipes.Length);
             return _recipes[index];
         }
         
-        internal static bool Compare(Dish dish, RecipeSO recipe)
+        internal static bool Compare(DishData dishData, RecipeSO recipe)
         {
             var requested = recipe.Instructions;
-            var delivered = dish.IngredientMap;
+            var delivered = dishData.IngredientMap;
      
             foreach (var requirement in requested)
             {
