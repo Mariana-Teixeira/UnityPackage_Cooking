@@ -1,3 +1,4 @@
+using System.Collections;
 using CookingSystem.Data;
 using CookingSystem.State;
 using UnityEngine;
@@ -23,13 +24,14 @@ namespace CookingSystem.Components
         {
             _applianceData.Clear();
         }
-
-        protected virtual void Cook()
+        
+        protected virtual IEnumerator Cook(float time)
         {
+            yield return new WaitForSeconds(time);
             _applianceData.Cook();
         }
 
-        protected DishComponent SpawnDish(GameObject @object, Transform parent)
+        protected DishComponent InstantiateDish(GameObject @object, Transform parent)
         {
             var dish = new DishData(_applianceData.IngredientMap);
             return Instantiate(@object, parent).AddComponent<DishComponent>().Add(dish);
