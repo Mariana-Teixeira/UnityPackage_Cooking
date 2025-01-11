@@ -1,5 +1,6 @@
 using System.Collections;
 using CookingSystem.Data;
+using CookingSystem.Events;
 using CookingSystem.State;
 using UnityEngine;
 
@@ -17,6 +18,7 @@ namespace CookingSystem.Components
 
         protected virtual void Add(IngredientComponent ingredientComponent)
         {
+            EventBus<AddIngredient>.Raise(new AddIngredient());
             _applianceData.Add(ingredientComponent.GetIngredientData);
         }
 
@@ -24,11 +26,17 @@ namespace CookingSystem.Components
         {
             _applianceData.Clear();
         }
-        
-        protected virtual IEnumerator Cook(float time)
+
+        protected virtual void Cook()
         {
-            yield return new WaitForSeconds(time);
             _applianceData.Cook();
+        }
+        
+        protected IEnumerator StartCookTimer(float time)
+        {
+            EventBus<BeginCookingEvent>.Raise(new BeginCookingEvent());
+            yield return new WaitForSeconds(time); Cook();
+            EventBus<EndCookingEvent>.Raise(new EndCookingEvent());
         }
 
         protected DishComponent InstantiateDish(GameObject @object, Transform parent)
