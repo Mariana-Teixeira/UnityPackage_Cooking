@@ -9,9 +9,9 @@ namespace CookingSystem.Data
         private readonly HashSet<IngredientData> _ingredientMap = new();
         internal HashSet<IngredientData> IngredientMap => _ingredientMap;
 
-        public ApplianceData(FoodState foodState) => _foodState = foodState;
-        public void Add(IngredientData ingredientData) => _ingredientMap.Add(ingredientData);
-        public void Clear() => _ingredientMap.Clear();
-        public void Cook() { foreach (var ingredient in _ingredientMap) ingredient.Cook(_foodState); }
+        internal ApplianceData(FoodState foodState) => _foodState = foodState;
+        internal void Add(IngredientData ingredientData) => _ingredientMap.Add(ingredientData);
+        internal void Clear() => _ingredientMap.Clear();
+        internal void Cook() { foreach (var ingredient in _ingredientMap) ingredient.Cook(_foodState); }
     }
 }

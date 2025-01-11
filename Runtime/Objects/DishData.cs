@@ -6,9 +6,9 @@ namespace CookingSystem.Data
     internal class DishData
     {
         private readonly Dictionary<FoodState, HashSet<IngredientSO>> _ingredientMap = new();
-        public Dictionary<FoodState, HashSet<IngredientSO>> IngredientMap => _ingredientMap;
+        internal Dictionary<FoodState, HashSet<IngredientSO>> IngredientMap => _ingredientMap;
 
-        public DishData(HashSet<IngredientData> ingredientMap)
+        internal DishData(HashSet<IngredientData> ingredientMap)
         {
             foreach (var data in ingredientMap)
             {

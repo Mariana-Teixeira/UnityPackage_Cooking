@@ -15,7 +15,7 @@ namespace CookingSystem.Components
             _ingredientData = new IngredientData(_ingredientSO);
         }
 
-        protected virtual void CookIngredient(FoodState newState)
+        protected virtual void Cook(FoodState newState)
         {
             _ingredientData.Cook(newState);
         }
