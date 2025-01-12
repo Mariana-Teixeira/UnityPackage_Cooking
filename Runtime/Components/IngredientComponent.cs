@@ -7,17 +7,17 @@ namespace CookingSystem.Components
     public class IngredientComponent : MonoBehaviour
     {
         [SerializeField] private IngredientSO _ingredientSO;
-        private IngredientData _ingredientData;
-        internal IngredientData GetIngredientData => _ingredientData;
+        private Ingredient _ingredient;
+        internal Ingredient getIngredient => _ingredient;
 
         protected virtual void Awake()
         {
-            _ingredientData = new IngredientData(_ingredientSO);
+            _ingredient = new Ingredient(_ingredientSO);
         }
 
         protected virtual void Cook(FoodState newState)
         {
-            _ingredientData.Cook(newState);
+            _ingredient.Cook(newState);
         }
     }
 }

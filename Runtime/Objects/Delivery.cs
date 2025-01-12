@@ -1,17 +1,17 @@
 namespace CookingSystem.Data
 {
-     internal class DeliveryData
+     internal class Delivery
      {
          private RecipeSO _requestedRecipeSO;
-         private DishData _deliveredDish;
+         private Dish _deliveredDish;
 
          internal RecipeSO RequestRecipe => _requestedRecipeSO;
-         internal DishData DeliveredDish => _deliveredDish;
+         internal Dish DeliveredDish => _deliveredDish;
          
-         internal DeliveryData() { }
+         internal Delivery() { }
 
          internal void Set(RecipeSO requestRecipe) => _requestedRecipeSO = requestRecipe;
-         internal void Set(DishData deliveredDishData) => _deliveredDish = deliveredDishData;
+         internal void Set(Dish deliveredDish) => _deliveredDish = deliveredDish;
          internal void Clear() { _requestedRecipeSO = null; _deliveredDish = null; }
      }
 }

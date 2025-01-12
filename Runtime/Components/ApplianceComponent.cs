@@ -11,7 +11,7 @@ namespace CookingSystem.Components
     {
         [SerializeField] private FoodState _foodState;
         private ApplianceState _currentState;
-        private ApplianceData _applianceData;
+        private Appliance _appliance;
         
         protected IObjectPool<DishComponent> _dishPool;
         [SerializeField] private GameObject _dishPrefab;
@@ -24,7 +24,7 @@ namespace CookingSystem.Components
         protected virtual void Awake()
         {
             _currentState = ApplianceState.Empty;
-            _applianceData = new ApplianceData(_foodState);
+            _appliance = new Appliance(_foodState);
             _dishPool = new ObjectPool<DishComponent>(InstantiateDish, GetDish, ReleaseDish, DestroyDish, true, _defaultSize, _maxSize);
         }
 
@@ -33,13 +33,13 @@ namespace CookingSystem.Components
             EventBus<AddIngredient>.Raise(new AddIngredient());
             
             _currentState = ApplianceState.Fill;
-            _applianceData.Add(ingredientComponent.GetIngredientData);
+            _appliance.Add(ingredientComponent.getIngredient);
         }
 
         protected virtual void Clear()
         {
             _currentState = ApplianceState.Empty;
-            _applianceData.Clear();
+            _appliance.Clear();
         }
 
         protected virtual void StartCook()
@@ -47,7 +47,7 @@ namespace CookingSystem.Components
             EventBus<BeginCookingEvent>.Raise(new BeginCookingEvent());
             
             _currentState = ApplianceState.Cooking;
-            _applianceData.Cook();
+            _appliance.Cook();
         }
 
         protected virtual void EndCook()
@@ -64,8 +64,8 @@ namespace CookingSystem.Components
         
         private DishComponent InstantiateDish()
         {
-            var data = new DishData(_applianceData.IngredientMap);
-            var dish = Instantiate(_dishPrefab).AddComponent<DishComponent>().Add(data, _dishPool);
+            var data = new Dish(_appliance.IngredientMap);
+            var dish = Instantiate(_dishPrefab).GetComponent<DishComponent>().Make(data, _dishPool);
             return dish;
         }
 

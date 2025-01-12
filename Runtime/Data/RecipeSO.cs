@@ -1,6 +1,5 @@
-using System;
-using CookingSystem.State;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace CookingSystem.Data
 {
@@ -8,15 +7,8 @@ namespace CookingSystem.Data
     public class RecipeSO : ScriptableObject
     {
         public string Name;
-        public Sprite Image;
+        [FormerlySerializedAs("Image")] public Sprite Sprite;
         [TextArea] public string Description;
-        public Requirements[] Instructions;
+        public IngredientData[] Data;
     }
-
-    [Serializable]
-    public struct Requirements
-    {
-        public FoodState State;
-        public IngredientSO[] Ingredients;
-    }   
 }

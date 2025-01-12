@@ -4,27 +4,27 @@ namespace CookingSystem.Data
 {
     public class DeliveryComponent : MonoBehaviour
     {
-        private DeliveryData _deliveryData;
-        private bool Compare => Loader.Compare(_deliveryData.DeliveredDish, _deliveryData.RequestRecipe);
+        private Delivery _delivery;
+        private bool Compare => RecipeLoader.CompareDish(_delivery.DeliveredDish, _delivery.RequestRecipe);
 
         protected virtual void Awake()
         {
-            _deliveryData = new DeliveryData();
+            _delivery = new Delivery();
         }
         
         protected virtual void Set(RecipeSO recipe)
         {
-            _deliveryData.Set(recipe);
+            _delivery.Set(recipe);
         }
 
         protected virtual void Set(DishComponent dish)
         {
-            _deliveryData.Set(dish.GetDishData);
+            _delivery.Set(dish.GetDish);
         }
 
         protected virtual void Clear()
         {
-            _deliveryData.Clear();
+            _delivery.Clear();
         }
 
         protected void Deliver()
@@ -33,14 +33,8 @@ namespace CookingSystem.Data
             else FailedDelivery();
         }
 
-        protected virtual void SuccessfulDelivery()
-        {
-            
-        }
+        protected virtual void SuccessfulDelivery() { }
 
-        protected virtual void FailedDelivery()
-        {
-            
-        }
+        protected virtual void FailedDelivery() { }
     }
 }
