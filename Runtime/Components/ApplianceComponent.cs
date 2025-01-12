@@ -64,13 +64,14 @@ namespace CookingSystem.Components
         
         private DishComponent InstantiateDish()
         {
-            var data = new Dish(_appliance.IngredientMap);
-            var dish = Instantiate(_dishPrefab).GetComponent<DishComponent>().Make(data, _dishPool);
+            var dish = Instantiate(_dishPrefab).GetComponent<DishComponent>().SetPool(_dishPool);
             return dish;
         }
 
         private void GetDish(DishComponent dishComponent)
         {
+            var data = new Dish(_appliance.IngredientMap);
+            dishComponent.SetDish(data);
             dishComponent.gameObject.SetActive(true);
         }
 

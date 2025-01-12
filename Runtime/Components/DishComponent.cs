@@ -11,16 +11,23 @@ namespace CookingSystem.Data
         protected RecipeSO GetRecipe => _dish.MatchingRecipe;
         protected bool HasMatch => _dish.FoundMatch;
 
-        internal DishComponent Make(Dish dish, IObjectPool<DishComponent> dishPool)
+        internal DishComponent SetPool(IObjectPool<DishComponent> dishPool)
+        {
+            _dishPool = dishPool;
+            return this;
+        }
+
+        internal DishComponent SetDish(Dish dish)
         {
             _dish = dish;
-            _dishPool = dishPool;
             Setup();
             return this;
         }
 
-        protected virtual void Setup() { }
+        protected virtual void Setup()
+        { }
 
+        protected void OverrideRecipe(RecipeSO recipe) => GetDish.MatchingRecipe = recipe;
         public void ReleaseSelf() => _dishPool.Release(this);
     }
 }

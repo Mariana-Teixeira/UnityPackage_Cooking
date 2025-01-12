@@ -1,7 +1,9 @@
+using System;
 using CookingSystem.State;
 
 namespace CookingSystem.Data
 {
+    [Serializable]
     internal class Ingredient
     {
         private FoodState GetFoodState { get; set; } = FoodState.Raw;

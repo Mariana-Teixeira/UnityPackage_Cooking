@@ -1,5 +1,8 @@
+using System;
+
 namespace CookingSystem.Data
 {
+    [Serializable]
      internal class Delivery
      {
          private RecipeSO _requestedRecipeSO;
